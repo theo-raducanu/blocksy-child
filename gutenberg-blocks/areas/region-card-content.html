@@ -1,0 +1,183 @@
+<!-- wp:group {"className":"myloft-areas__section myloft-areas__section--tight-top","layout":{"type":"constrained"}} -->
+<div class="wp-block-group myloft-areas__section myloft-areas__section--tight-top">
+    <!-- wp:group {"className":"myloft-areas__wrap","layout":{"type":"constrained"}} -->
+    <div class="wp-block-group myloft-areas__wrap">
+        <!-- wp:html -->
+        <style>
+            .myloft-areas__card {
+                background: #fff;
+                border-radius: 30px;
+                overflow: hidden;
+                border: 1px solid #ece7dc;
+            }
+
+            .myloft-areas__card-grid {
+                gap: 32px;
+                margin: 0;
+            }
+
+            .myloft-areas__card-grid .wp-block-column {
+                margin: 0;
+            }
+
+            .myloft-areas__card-image {
+                min-height: 360px;
+            }
+
+            .myloft-areas__card-image .wp-block-cover__background {
+                background: transparent;
+            }
+
+            .myloft-areas__card-body {
+                padding: 28px;
+            }
+
+            .myloft-areas__tag {
+                display: inline-block;
+                font-size: .68rem;
+                font-weight: 800;
+                letter-spacing: .1em;
+                text-transform: uppercase;
+                background: #ab9867;
+                color: #fff;
+                border-radius: 30px;
+                padding: 4px 12px;
+                margin: 0 0 12px;
+                line-height: 1.2;
+            }
+
+            .myloft-areas__card-body h2 {
+                font-size: clamp(1.6rem, 3vw, 2.4rem);
+                font-weight: 800;
+                line-height: 1.2;
+                margin-bottom: 8px;
+            }
+
+            .myloft-areas__card-copy {
+                color: #555;
+                line-height: 1.75;
+                margin-bottom: 0;
+            }
+
+            .myloft-areas__areas-list {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 10px;
+                margin: 18px 0 8px;
+                padding: 0;
+                list-style: none;
+            }
+
+            .myloft-areas__areas-list li {
+                margin: 0;
+            }
+
+            .myloft-areas__areas-list a {
+                display: inline-flex;
+                align-items: center;
+                padding: 8px 14px;
+                border-radius: 999px;
+                background: #e8f2e3;
+                border: 1px solid #cfe2c5;
+                font-size: .84rem;
+                font-weight: 700;
+                color: #224117;
+                text-decoration: none;
+            }
+
+            .myloft-areas__main-link {
+                margin: 0;
+            }
+
+            .myloft-areas__main-link a {
+                display: inline-flex;
+                align-items: center;
+                gap: 10px;
+                font-size: .9rem;
+                font-weight: 700;
+                text-decoration: underline;
+                text-underline-offset: 3px;
+                color: #111;
+            }
+
+            @media (max-width:1024px) {
+                .myloft-areas__card-image {
+                    min-height: 260px;
+                }
+
+                .myloft-areas__card-body {
+                    padding: 22px;
+                }
+            }
+
+            @media (max-width:768px) {
+                .myloft-areas__card-image {
+                    min-height: 220px;
+                }
+
+                .myloft-areas__areas-list a {
+                    font-size: .8rem;
+                    padding: 7px 12px;
+                }
+            }
+        </style>
+        <!-- /wp:html -->
+
+        <!-- wp:group {"className":"myloft-areas__card","layout":{"type":"constrained"}} -->
+        <div class="wp-block-group myloft-areas__card">
+            <!-- wp:columns {"verticalAlignment":"center","className":"myloft-areas__card-grid"} -->
+            <div class="wp-block-columns are-vertically-aligned-center myloft-areas__card-grid">
+                <!-- wp:column {"verticalAlignment":"center"} -->
+                <div class="wp-block-column is-vertically-aligned-center">
+                    <!-- wp:cover {"url":"https://masterpiececonstruction.co.uk/wp-content/uploads/2023/04/Chelsea.jpg","id":0,"dimRatio":0,"minHeight":360,"className":"myloft-areas__card-image","layout":{"type":"constrained"}} -->
+                    <div class="wp-block-cover myloft-areas__card-image" style="min-height:360px"><span
+                            aria-hidden="true"
+                            class="wp-block-cover__background has-background-dim-0 has-background-dim"></span><img
+                            class="wp-block-cover__image-background" alt=""
+                            src="https://masterpiececonstruction.co.uk/wp-content/uploads/2023/04/Chelsea.jpg"
+                            data-object-fit="cover" />
+                        <div class="wp-block-cover__inner-container"></div>
+                    </div>
+                    <!-- /wp:cover -->
+                </div>
+                <!-- /wp:column -->
+
+                <!-- wp:column {"verticalAlignment":"center"} -->
+                <div class="wp-block-column is-vertically-aligned-center">
+                    <!-- wp:group {"className":"myloft-areas__card-body","layout":{"type":"constrained"}} -->
+                    <div class="wp-block-group myloft-areas__card-body">
+                        <!-- wp:paragraph {"className":"myloft-areas__tag"} -->
+                        <p class="myloft-areas__tag">Primary Region</p>
+                        <!-- /wp:paragraph -->
+
+                        <!-- wp:heading {"level":2} -->
+                        <h2 class="wp-block-heading">Region Name</h2>
+                        <!-- /wp:heading -->
+
+                        <!-- wp:paragraph {"className":"myloft-areas__card-copy"} -->
+                        <p class="myloft-areas__card-copy">Replace this text with the local overview for this region.
+                        </p>
+                        <!-- /wp:paragraph -->
+
+                        <!-- wp:list {"className":"myloft-areas__areas-list"} -->
+                        <ul class="myloft-areas__areas-list">
+                            <li><a href="#">Sub-area link 1</a></li>
+                            <li><a href="#">Sub-area link 2</a></li>
+                        </ul>
+                        <!-- /wp:list -->
+
+                        <!-- wp:paragraph {"className":"myloft-areas__main-link"} -->
+                        <p class="myloft-areas__main-link"><a href="#">View Main Region Page →</a></p>
+                        <!-- /wp:paragraph -->
+                    </div>
+                    <!-- /wp:group -->
+                </div>
+                <!-- /wp:column -->
+            </div>
+            <!-- /wp:columns -->
+        </div>
+        <!-- /wp:group -->
+    </div>
+    <!-- /wp:group -->
+</div>
+<!-- /wp:group -->
