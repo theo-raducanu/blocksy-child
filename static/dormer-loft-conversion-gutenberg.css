@@ -56,9 +56,10 @@
 
 .dormer-loft-blocks .wrap {
 
-    max-width: var(--max-w);
+    width: var(--theme-container-width, 1200px);
+    max-width: var(--theme-normal-container-max-width, 1200px);
     margin: 0 auto;
-    padding: 0 32px;
+    padding: 0;
   
 }
 
@@ -772,7 +773,7 @@
 
 .dormer-loft-blocks .wrap {
 
-      padding: 0 20px;
+    padding: 0;
     
 }
 

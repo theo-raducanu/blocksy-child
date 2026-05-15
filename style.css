@@ -28,10 +28,10 @@
 }
 
 .myloft-areas .wrap {
-	max-width: var(--myloft-wrap-width);
+	width: var(--theme-container-width, 1200px);
+	max-width: var(--theme-normal-container-max-width, 1200px);
 	margin: 0 auto;
-	padding: 0 32px;
-	width: 100%;
+	padding: 0;
 	box-sizing: border-box;
 }
 
@@ -96,11 +96,11 @@
 }
 
 .myloft-areas__wrap {
-	max-width: var(--myloft-wrap-width);
+	width: var(--theme-container-width, 1200px);
+	max-width: var(--theme-normal-container-max-width, 1200px);
 	margin: 0 auto;
-	padding-left: 32px;
-	padding-right: 32px;
-	width: 100%;
+	padding-left: 0;
+	padding-right: 0;
 	box-sizing: border-box;
 }
 
@@ -225,7 +225,7 @@
 
 @media (max-width: 1024px) {
 	.myloft-areas .wrap {
-		padding: 0 20px;
+		padding: 0;
 	}
 
 	.myloft-areas .intro-grid {
@@ -421,8 +421,8 @@
 
 @media (max-width: 1024px) {
 	.myloft-areas__wrap {
-		padding-left: 20px;
-		padding-right: 20px;
+		padding-left: 0;
+		padding-right: 0;
 	}
 
 	.myloft-areas__section {
