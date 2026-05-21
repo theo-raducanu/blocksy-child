@@ -11,6 +11,7 @@
     var PanelBody = wp.components.PanelBody;
     var Button = wp.components.Button;
     var TextControl = wp.components.TextControl;
+    var TextareaControl = wp.components.TextareaControl;
 
     if (typeof getBlockType === 'function' && getBlockType('myloft/dormer-what-is')) return;
 
@@ -46,7 +47,21 @@
                 }
                 return el('div', blockProps,
                     el(InspectorControls, {},
-                        el(PanelBody, { title: 'Image', initialOpen: true },
+                        el(PanelBody, { title: 'Section Content', initialOpen: true },
+                            el(TextControl, { label: 'Eyebrow', value: attrs.eyebrow || '', onChange: function (v) { setAttributes({ eyebrow: v }); } }),
+                            el(TextControl, { label: 'Heading (H2)', value: attrs.h2 || '', onChange: function (v) { setAttributes({ h2: v }); } }),
+                            el(TextareaControl, { label: 'Paragraph 1', value: attrs.para1 || '', rows: 3, onChange: function (v) { setAttributes({ para1: v }); } }),
+                            el(TextareaControl, { label: 'Paragraph 2', value: attrs.para2 || '', rows: 3, onChange: function (v) { setAttributes({ para2: v }); } }),
+                            el(TextControl, { label: 'Subheading (H3)', value: attrs.h3 || '', onChange: function (v) { setAttributes({ h3: v }); } }),
+                            el(TextareaControl, { label: 'Note', value: attrs.note || '', rows: 3, onChange: function (v) { setAttributes({ note: v }); } })
+                        ),
+                        el(PanelBody, { title: 'Checklist', initialOpen: false },
+                            el(TextareaControl, { label: 'Check 1', value: attrs.check1 || '', rows: 3, onChange: function (v) { setAttributes({ check1: v }); } }),
+                            el(TextareaControl, { label: 'Check 2', value: attrs.check2 || '', rows: 3, onChange: function (v) { setAttributes({ check2: v }); } }),
+                            el(TextareaControl, { label: 'Check 3', value: attrs.check3 || '', rows: 3, onChange: function (v) { setAttributes({ check3: v }); } }),
+                            el(TextareaControl, { label: 'Check 4', value: attrs.check4 || '', rows: 3, onChange: function (v) { setAttributes({ check4: v }); } })
+                        ),
+                        el(PanelBody, { title: 'Image', initialOpen: false },
                             el(MediaUploadCheck, {},
                                 el(MediaUpload, {
                                     onSelect: function (media) { setAttributes({ imageId: media.id, imageUrl: media.url, imageAlt: media.alt || '' }); },

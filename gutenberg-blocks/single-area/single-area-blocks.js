@@ -730,7 +730,7 @@
         return [
             '<section class="section section--dark" id="contact" style="position:relative;overflow:hidden;">',
             '    <div class="img-cover" style="position:absolute;inset:0;border-radius:0;background-image:url(\'' + escapeAttr(data.bgImageUrl) + '\');"></div>',
-            '    <div style="position:absolute;inset:0;background:rgba(4,4,4,.83);"></div>',
+            '    <div style="position:absolute;inset:0;background:rgba(30,30,30,.66);"></div>',
             '    <div class="wrap" style="position:relative;z-index:2;"><span class="eyebrow">' + escapeHtml(data.eyebrow) + '</span>',
             '        <h2 style="color:#fff;max-width:760px;margin-bottom:12px;">' + escapeHtml(data.title) + '</h2>',
             '        <p style="color:var(--color-muted);max-width:820px;margin-bottom:22px;">' + escapeHtml(data.description) + '</p>',

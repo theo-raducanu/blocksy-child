@@ -8,6 +8,7 @@
     var InspectorControls = wp.blockEditor.InspectorControls;
     var PanelBody = wp.components.PanelBody;
     var TextControl = wp.components.TextControl;
+    var TextareaControl = wp.components.TextareaControl;
 
     if (typeof getBlockType === 'function' && getBlockType('myloft/dormer-why-my-loft')) return;
 
@@ -61,8 +62,51 @@
                 }
                 return el('div', blockProps,
                     el(InspectorControls, {},
-                        el(PanelBody, { title: 'CTA Links', initialOpen: false },
+                        el(PanelBody, { title: 'Section Content', initialOpen: true },
+                            el(TextControl, { label: 'Eyebrow', value: attrs.eyebrow || '', onChange: function (v) { setAttributes({ eyebrow: v }); } }),
+                            el(TextControl, { label: 'Heading', value: attrs.h2 || '', onChange: function (v) { setAttributes({ h2: v }); } }),
+                            el(TextControl, { label: 'Subtitle', value: attrs.h3Subtitle || '', onChange: function (v) { setAttributes({ h3Subtitle: v }); } })
+                        ),
+                        el(PanelBody, { title: 'USP 1', initialOpen: false },
+                            el(TextControl, { label: 'Badge', value: attrs.usp1Badge || '', onChange: function (v) { setAttributes({ usp1Badge: v }); } }),
+                            el(TextControl, { label: 'Heading', value: attrs.usp1H3 || '', onChange: function (v) { setAttributes({ usp1H3: v }); } }),
+                            el(TextareaControl, { label: 'Description', value: attrs.usp1P || '', rows: 3, onChange: function (v) { setAttributes({ usp1P: v }); } })
+                        ),
+                        el(PanelBody, { title: 'USP 2', initialOpen: false },
+                            el(TextControl, { label: 'Badge', value: attrs.usp2Badge || '', onChange: function (v) { setAttributes({ usp2Badge: v }); } }),
+                            el(TextControl, { label: 'Heading', value: attrs.usp2H3 || '', onChange: function (v) { setAttributes({ usp2H3: v }); } }),
+                            el(TextareaControl, { label: 'Description', value: attrs.usp2P || '', rows: 3, onChange: function (v) { setAttributes({ usp2P: v }); } })
+                        ),
+                        el(PanelBody, { title: 'USP 3', initialOpen: false },
+                            el(TextControl, { label: 'Badge', value: attrs.usp3Badge || '', onChange: function (v) { setAttributes({ usp3Badge: v }); } }),
+                            el(TextControl, { label: 'Heading', value: attrs.usp3H3 || '', onChange: function (v) { setAttributes({ usp3H3: v }); } }),
+                            el(TextareaControl, { label: 'Description', value: attrs.usp3P || '', rows: 3, onChange: function (v) { setAttributes({ usp3P: v }); } })
+                        ),
+                        el(PanelBody, { title: 'Dark Panel 1', initialOpen: false },
+                            el(TextControl, { label: 'Heading', value: attrs.dark1H3 || '', onChange: function (v) { setAttributes({ dark1H3: v }); } }),
+                            el(TextareaControl, { label: 'Body', value: attrs.dark1P || '', rows: 3, onChange: function (v) { setAttributes({ dark1P: v }); } })
+                        ),
+                        el(PanelBody, { title: 'Dark Panel 2', initialOpen: false },
+                            el(TextControl, { label: 'Heading', value: attrs.dark2H3 || '', onChange: function (v) { setAttributes({ dark2H3: v }); } }),
+                            el(TextareaControl, { label: 'Body', value: attrs.dark2P || '', rows: 3, onChange: function (v) { setAttributes({ dark2P: v }); } })
+                        ),
+                        el(PanelBody, { title: 'What\'s Included', initialOpen: false },
+                            el(TextControl, { label: 'Section Title', value: attrs.includedTitle || '', onChange: function (v) { setAttributes({ includedTitle: v }); } }),
+                            el(TextControl, { label: 'Item 1', value: attrs.inc1 || '', onChange: function (v) { setAttributes({ inc1: v }); } }),
+                            el(TextControl, { label: 'Item 2', value: attrs.inc2 || '', onChange: function (v) { setAttributes({ inc2: v }); } }),
+                            el(TextControl, { label: 'Item 3', value: attrs.inc3 || '', onChange: function (v) { setAttributes({ inc3: v }); } }),
+                            el(TextControl, { label: 'Item 4', value: attrs.inc4 || '', onChange: function (v) { setAttributes({ inc4: v }); } }),
+                            el(TextControl, { label: 'Item 5', value: attrs.inc5 || '', onChange: function (v) { setAttributes({ inc5: v }); } }),
+                            el(TextControl, { label: 'Item 6', value: attrs.inc6 || '', onChange: function (v) { setAttributes({ inc6: v }); } }),
+                            el(TextControl, { label: 'Item 7', value: attrs.inc7 || '', onChange: function (v) { setAttributes({ inc7: v }); } }),
+                            el(TextControl, { label: 'Item 8', value: attrs.inc8 || '', onChange: function (v) { setAttributes({ inc8: v }); } }),
+                            el(TextControl, { label: 'Item 9', value: attrs.inc9 || '', onChange: function (v) { setAttributes({ inc9: v }); } }),
+                            el(TextControl, { label: 'Item 10', value: attrs.inc10 || '', onChange: function (v) { setAttributes({ inc10: v }); } })
+                        ),
+                        el(PanelBody, { title: 'CTA Buttons', initialOpen: false },
+                            el(TextControl, { label: 'CTA 1 Text', value: attrs.cta1Text || '', onChange: function (v) { setAttributes({ cta1Text: v }); } }),
                             el(TextControl, { label: 'CTA 1 URL', value: attrs.cta1Url, onChange: function (v) { setAttributes({ cta1Url: v }); } }),
+                            el(TextControl, { label: 'CTA 2 Text', value: attrs.cta2Text || '', onChange: function (v) { setAttributes({ cta2Text: v }); } }),
                             el(TextControl, { label: 'CTA 2 URL', value: attrs.cta2Url, onChange: function (v) { setAttributes({ cta2Url: v }); } })
                         )
                     ),

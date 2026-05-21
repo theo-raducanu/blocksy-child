@@ -177,7 +177,7 @@ function blocksy_child_render_dormer_hero_block($attributes = []) {
 
 	ob_start();
 	include $template;
-	return '<div class="dormer-loft-blocks">' . (string) ob_get_clean() . '</div>';
+	return '<div class="dormer-loft-blocks alignfull">' . (string) ob_get_clean() . '</div>';
 }
 
 /**
@@ -268,7 +268,7 @@ function blocksy_child_render_dormer_trust_bar_block($attributes = []) {
 	$template = get_stylesheet_directory() . '/gutenberg-blocks/dormer/dormer-trust-bar-render.php';
 	if (!file_exists($template)) return '';
 	$block_attributes = is_array($attributes) ? $attributes : [];
-	ob_start(); include $template; return '<div class="dormer-loft-blocks">' . (string) ob_get_clean() . '</div>';
+	ob_start(); include $template; return '<div class="dormer-loft-blocks alignfull">' . (string) ob_get_clean() . '</div>';
 }
 function blocksy_child_register_dormer_trust_bar_block() {
 	if (!function_exists('register_block_type')) return;
@@ -292,7 +292,7 @@ function blocksy_child_render_dormer_what_is_block($attributes = []) {
 	$template = get_stylesheet_directory() . '/gutenberg-blocks/dormer/dormer-what-is-render.php';
 	if (!file_exists($template)) return '';
 	$block_attributes = is_array($attributes) ? $attributes : [];
-	ob_start(); include $template; return '<div class="dormer-loft-blocks">' . (string) ob_get_clean() . '</div>';
+	ob_start(); include $template; return '<div class="dormer-loft-blocks alignfull">' . (string) ob_get_clean() . '</div>';
 }
 function blocksy_child_register_dormer_what_is_block() {
 	if (!function_exists('register_block_type')) return;
@@ -323,7 +323,7 @@ function blocksy_child_render_dormer_why_my_loft_block($attributes = []) {
 	$template = get_stylesheet_directory() . '/gutenberg-blocks/dormer/dormer-why-my-loft-render.php';
 	if (!file_exists($template)) return '';
 	$block_attributes = is_array($attributes) ? $attributes : [];
-	ob_start(); include $template; return '<div class="dormer-loft-blocks">' . (string) ob_get_clean() . '</div>';
+	ob_start(); include $template; return '<div class="dormer-loft-blocks alignfull">' . (string) ob_get_clean() . '</div>';
 }
 function blocksy_child_register_dormer_why_my_loft_block() {
 	if (!function_exists('register_block_type')) return;
@@ -360,7 +360,7 @@ function blocksy_child_render_dormer_collections_block($attributes = []) {
 	$template = get_stylesheet_directory() . '/gutenberg-blocks/dormer/dormer-collections-render.php';
 	if (!file_exists($template)) return '';
 	$block_attributes = is_array($attributes) ? $attributes : [];
-	ob_start(); include $template; return '<div class="dormer-loft-blocks">' . (string) ob_get_clean() . '</div>';
+	ob_start(); include $template; return '<div class="dormer-loft-blocks alignfull">' . (string) ob_get_clean() . '</div>';
 }
 function blocksy_child_register_dormer_collections_block() {
 	if (!function_exists('register_block_type')) return;
@@ -395,7 +395,7 @@ function blocksy_child_render_dormer_process_block($attributes = []) {
 	$template = get_stylesheet_directory() . '/gutenberg-blocks/dormer/dormer-process-render.php';
 	if (!file_exists($template)) return '';
 	$block_attributes = is_array($attributes) ? $attributes : [];
-	ob_start(); include $template; return '<div class="dormer-loft-blocks">' . (string) ob_get_clean() . '</div>';
+	ob_start(); include $template; return '<div class="dormer-loft-blocks alignfull">' . (string) ob_get_clean() . '</div>';
 }
 function blocksy_child_register_dormer_process_block() {
 	if (!function_exists('register_block_type')) return;
@@ -431,7 +431,7 @@ function blocksy_child_render_dormer_pricing_block($attributes = []) {
 	$template = get_stylesheet_directory() . '/gutenberg-blocks/dormer/dormer-pricing-render.php';
 	if (!file_exists($template)) return '';
 	$block_attributes = is_array($attributes) ? $attributes : [];
-	ob_start(); include $template; return '<div class="dormer-loft-blocks">' . (string) ob_get_clean() . '</div>';
+	ob_start(); include $template; return '<div class="dormer-loft-blocks alignfull">' . (string) ob_get_clean() . '</div>';
 }
 function blocksy_child_register_dormer_pricing_block() {
 	if (!function_exists('register_block_type')) return;
@@ -470,7 +470,7 @@ function blocksy_child_render_dormer_calculator_block($attributes = []) {
 	$template = get_stylesheet_directory() . '/gutenberg-blocks/dormer/dormer-calculator-render.php';
 	if (!file_exists($template)) return '';
 	$block_attributes = is_array($attributes) ? $attributes : [];
-	ob_start(); include $template; return '<div class="dormer-loft-blocks">' . (string) ob_get_clean() . '</div>';
+	ob_start(); include $template; return '<div class="dormer-loft-blocks alignfull">' . (string) ob_get_clean() . '</div>';
 }
 function blocksy_child_register_dormer_calculator_block() {
 	if (!function_exists('register_block_type')) return;
@@ -494,7 +494,7 @@ function blocksy_child_render_dormer_planning_block($attributes = []) {
 	$template = get_stylesheet_directory() . '/gutenberg-blocks/dormer/dormer-planning-render.php';
 	if (!file_exists($template)) return '';
 	$block_attributes = is_array($attributes) ? $attributes : [];
-	ob_start(); include $template; return '<div class="dormer-loft-blocks">' . (string) ob_get_clean() . '</div>';
+	ob_start(); include $template; return '<div class="dormer-loft-blocks alignfull">' . (string) ob_get_clean() . '</div>';
 }
 function blocksy_child_register_dormer_planning_block() {
 	if (!function_exists('register_block_type')) return;
@@ -528,7 +528,7 @@ function blocksy_child_render_dormer_projects_block($attributes = []) {
 	$template = get_stylesheet_directory() . '/gutenberg-blocks/dormer/dormer-projects-render.php';
 	if (!file_exists($template)) return '';
 	$block_attributes = is_array($attributes) ? $attributes : [];
-	ob_start(); include $template; return '<div class="dormer-loft-blocks">' . (string) ob_get_clean() . '</div>';
+	ob_start(); include $template; return '<div class="dormer-loft-blocks alignfull">' . (string) ob_get_clean() . '</div>';
 }
 function blocksy_child_register_dormer_projects_block() {
 	if (!function_exists('register_block_type')) return;
@@ -563,7 +563,7 @@ function blocksy_child_render_dormer_types_block($attributes = []) {
 	$template = get_stylesheet_directory() . '/gutenberg-blocks/dormer/dormer-types-render.php';
 	if (!file_exists($template)) return '';
 	$block_attributes = is_array($attributes) ? $attributes : [];
-	ob_start(); include $template; return '<div class="dormer-loft-blocks">' . (string) ob_get_clean() . '</div>';
+	ob_start(); include $template; return '<div class="dormer-loft-blocks alignfull">' . (string) ob_get_clean() . '</div>';
 }
 function blocksy_child_register_dormer_types_block() {
 	if (!function_exists('register_block_type')) return;
@@ -609,7 +609,7 @@ function blocksy_child_render_dormer_areas_block($attributes = []) {
 	$template = get_stylesheet_directory() . '/gutenberg-blocks/dormer/dormer-areas-render.php';
 	if (!file_exists($template)) return '';
 	$block_attributes = is_array($attributes) ? $attributes : [];
-	ob_start(); include $template; return '<div class="dormer-loft-blocks">' . (string) ob_get_clean() . '</div>';
+	ob_start(); include $template; return '<div class="dormer-loft-blocks alignfull">' . (string) ob_get_clean() . '</div>';
 }
 function blocksy_child_register_dormer_areas_block() {
 	if (!function_exists('register_block_type')) return;
@@ -667,7 +667,7 @@ function blocksy_child_render_dormer_faq_block($attributes = []) {
 	$template = get_stylesheet_directory() . '/gutenberg-blocks/dormer/dormer-faq-render.php';
 	if (!file_exists($template)) return '';
 	$block_attributes = is_array($attributes) ? $attributes : [];
-	ob_start(); include $template; return '<div class="dormer-loft-blocks">' . (string) ob_get_clean() . '</div>';
+	ob_start(); include $template; return '<div class="dormer-loft-blocks alignfull">' . (string) ob_get_clean() . '</div>';
 }
 function blocksy_child_register_dormer_faq_block() {
 	if (!function_exists('register_block_type')) return;
@@ -714,7 +714,7 @@ function blocksy_child_render_dormer_contact_block($attributes = []) {
 	$template = get_stylesheet_directory() . '/gutenberg-blocks/dormer/dormer-contact-render.php';
 	if (!file_exists($template)) return '';
 	$block_attributes = is_array($attributes) ? $attributes : [];
-	ob_start(); include $template; return '<div class="dormer-loft-blocks">' . (string) ob_get_clean() . '</div>';
+	ob_start(); include $template; return '<div class="dormer-loft-blocks alignfull">' . (string) ob_get_clean() . '</div>';
 }
 function blocksy_child_register_dormer_contact_block() {
 	if (!function_exists('register_block_type')) return;
@@ -870,7 +870,7 @@ function blocksy_child_render_single_area_block($attributes = [], $content = '',
 			return $section_html;
 		}
 
-		return '<div class="single-area-blocks">' . $section_html . '</div>';
+		return '<div class="single-area-blocks alignfull">' . $section_html . '</div>';
 	}
 
 	if (! isset($config['index']) || ! is_int($config['index'])) {
@@ -888,7 +888,7 @@ function blocksy_child_render_single_area_block($attributes = [], $content = '',
 		$section_html .= "\n" . (string) $source_parts['script'];
 	}
 
-	return '<div class="single-area-blocks">' . $section_html . '</div>';
+	return '<div class="single-area-blocks alignfull">' . $section_html . '</div>';
 }
 
 /**

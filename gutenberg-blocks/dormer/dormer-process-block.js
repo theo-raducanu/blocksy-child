@@ -8,6 +8,7 @@
     var InspectorControls = wp.blockEditor.InspectorControls;
     var PanelBody = wp.components.PanelBody;
     var TextControl = wp.components.TextControl;
+    var TextareaControl = wp.components.TextareaControl;
 
     if (typeof getBlockType === 'function' && getBlockType('myloft/dormer-process')) return;
 
@@ -66,8 +67,70 @@
                 }
                 return el('div', blockProps,
                     el(InspectorControls, {},
-                        el(PanelBody, { title: 'CTA Links', initialOpen: false },
+                        el(PanelBody, { title: 'Section Content', initialOpen: true },
+                            el(TextControl, { label: 'Eyebrow', value: a.eyebrow || '', onChange: function (v) { setAttributes({ eyebrow: v }); } }),
+                            el(TextControl, { label: 'Heading', value: a.h2 || '', onChange: function (v) { setAttributes({ h2: v }); } })
+                        ),
+                        el(PanelBody, { title: 'Timeline Item 1', initialOpen: false },
+                            el(TextControl, { label: 'Weeks', value: a.tl1Weeks || '', onChange: function (v) { setAttributes({ tl1Weeks: v }); } }),
+                            el(TextControl, { label: 'Phase', value: a.tl1Phase || '', onChange: function (v) { setAttributes({ tl1Phase: v }); } }),
+                            el(TextareaControl, { label: 'Description', value: a.tl1Desc || '', rows: 3, onChange: function (v) { setAttributes({ tl1Desc: v }); } })
+                        ),
+                        el(PanelBody, { title: 'Timeline Item 2', initialOpen: false },
+                            el(TextControl, { label: 'Weeks', value: a.tl2Weeks || '', onChange: function (v) { setAttributes({ tl2Weeks: v }); } }),
+                            el(TextControl, { label: 'Phase', value: a.tl2Phase || '', onChange: function (v) { setAttributes({ tl2Phase: v }); } }),
+                            el(TextareaControl, { label: 'Description', value: a.tl2Desc || '', rows: 3, onChange: function (v) { setAttributes({ tl2Desc: v }); } })
+                        ),
+                        el(PanelBody, { title: 'Timeline Item 3', initialOpen: false },
+                            el(TextControl, { label: 'Weeks', value: a.tl3Weeks || '', onChange: function (v) { setAttributes({ tl3Weeks: v }); } }),
+                            el(TextControl, { label: 'Phase', value: a.tl3Phase || '', onChange: function (v) { setAttributes({ tl3Phase: v }); } }),
+                            el(TextareaControl, { label: 'Description', value: a.tl3Desc || '', rows: 3, onChange: function (v) { setAttributes({ tl3Desc: v }); } })
+                        ),
+                        el(PanelBody, { title: 'Timeline Item 4', initialOpen: false },
+                            el(TextControl, { label: 'Weeks', value: a.tl4Weeks || '', onChange: function (v) { setAttributes({ tl4Weeks: v }); } }),
+                            el(TextControl, { label: 'Phase', value: a.tl4Phase || '', onChange: function (v) { setAttributes({ tl4Phase: v }); } }),
+                            el(TextareaControl, { label: 'Description', value: a.tl4Desc || '', rows: 3, onChange: function (v) { setAttributes({ tl4Desc: v }); } })
+                        ),
+                        el(PanelBody, { title: 'Why We\'re Faster', initialOpen: false },
+                            el(TextControl, { label: 'Title', value: a.whyFasterTitle || '', onChange: function (v) { setAttributes({ whyFasterTitle: v }); } }),
+                            el(TextareaControl, { label: 'Body', value: a.whyFasterBody || '', rows: 3, onChange: function (v) { setAttributes({ whyFasterBody: v }); } })
+                        ),
+                        el(PanelBody, { title: 'Step 1', initialOpen: false },
+                            el(TextControl, { label: 'Title', value: a.step1Title || '', onChange: function (v) { setAttributes({ step1Title: v }); } }),
+                            el(TextareaControl, { label: 'Description', value: a.step1Desc || '', rows: 3, onChange: function (v) { setAttributes({ step1Desc: v }); } })
+                        ),
+                        el(PanelBody, { title: 'Step 2', initialOpen: false },
+                            el(TextControl, { label: 'Title', value: a.step2Title || '', onChange: function (v) { setAttributes({ step2Title: v }); } }),
+                            el(TextareaControl, { label: 'Description', value: a.step2Desc || '', rows: 3, onChange: function (v) { setAttributes({ step2Desc: v }); } })
+                        ),
+                        el(PanelBody, { title: 'Step 3', initialOpen: false },
+                            el(TextControl, { label: 'Title', value: a.step3Title || '', onChange: function (v) { setAttributes({ step3Title: v }); } }),
+                            el(TextareaControl, { label: 'Description', value: a.step3Desc || '', rows: 3, onChange: function (v) { setAttributes({ step3Desc: v }); } })
+                        ),
+                        el(PanelBody, { title: 'Step 4', initialOpen: false },
+                            el(TextControl, { label: 'Title', value: a.step4Title || '', onChange: function (v) { setAttributes({ step4Title: v }); } }),
+                            el(TextareaControl, { label: 'Description', value: a.step4Desc || '', rows: 3, onChange: function (v) { setAttributes({ step4Desc: v }); } })
+                        ),
+                        el(PanelBody, { title: 'Step 5', initialOpen: false },
+                            el(TextControl, { label: 'Title', value: a.step5Title || '', onChange: function (v) { setAttributes({ step5Title: v }); } }),
+                            el(TextareaControl, { label: 'Description', value: a.step5Desc || '', rows: 3, onChange: function (v) { setAttributes({ step5Desc: v }); } })
+                        ),
+                        el(PanelBody, { title: 'Step 6', initialOpen: false },
+                            el(TextControl, { label: 'Title', value: a.step6Title || '', onChange: function (v) { setAttributes({ step6Title: v }); } }),
+                            el(TextareaControl, { label: 'Description', value: a.step6Desc || '', rows: 3, onChange: function (v) { setAttributes({ step6Desc: v }); } })
+                        ),
+                        el(PanelBody, { title: 'Step 7', initialOpen: false },
+                            el(TextControl, { label: 'Title', value: a.step7Title || '', onChange: function (v) { setAttributes({ step7Title: v }); } }),
+                            el(TextareaControl, { label: 'Description', value: a.step7Desc || '', rows: 3, onChange: function (v) { setAttributes({ step7Desc: v }); } })
+                        ),
+                        el(PanelBody, { title: 'Step 8', initialOpen: false },
+                            el(TextControl, { label: 'Title', value: a.step8Title || '', onChange: function (v) { setAttributes({ step8Title: v }); } }),
+                            el(TextareaControl, { label: 'Description', value: a.step8Desc || '', rows: 3, onChange: function (v) { setAttributes({ step8Desc: v }); } })
+                        ),
+                        el(PanelBody, { title: 'CTA Buttons', initialOpen: false },
+                            el(TextControl, { label: 'CTA 1 Text', value: a.cta1Text || '', onChange: function (v) { setAttributes({ cta1Text: v }); } }),
                             el(TextControl, { label: 'CTA 1 URL', value: a.cta1Url, onChange: function (v) { setAttributes({ cta1Url: v }); } }),
+                            el(TextControl, { label: 'CTA 2 Text', value: a.cta2Text || '', onChange: function (v) { setAttributes({ cta2Text: v }); } }),
                             el(TextControl, { label: 'CTA 2 URL', value: a.cta2Url, onChange: function (v) { setAttributes({ cta2Url: v }); } })
                         )
                     ),

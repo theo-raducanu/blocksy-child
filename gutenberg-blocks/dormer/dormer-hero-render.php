@@ -24,7 +24,7 @@ $hero = wp_parse_args(array_filter($_raw_hero, function($v) { return $v !== ''; 
 		style="position:absolute;inset:0;background-color:#0d0d0d;<?php echo $hero['heroImageUrl'] !== '' ? 'background-image:url(' . esc_url($hero['heroImageUrl']) . ');background-size:cover;background-position:center;' : ''; ?>"
 		aria-label="<?php echo esc_attr($hero['heroImageAlt']); ?>"
 	></div>
-	<div style="position:absolute;inset:0;background:linear-gradient(110deg,rgba(4,4,4,0.88) 0%,rgba(4,4,4,0.55) 70%,rgba(4,4,4,0.3) 100%);"></div>
+	<div style="position:absolute;inset:0;background-color: var(--wp--preset--color--palette-color-3, var(--theme-palette-color-3, #1e1e1e)); opacity: 0.66;"></div>
 	<div class="wrap" style="position:relative;z-index:2;width:var(--theme-container-width,1200px);max-width:var(--theme-normal-container-max-width,1200px);">
 		<h1 style="color:#fff;max-width:680px;margin-bottom:20px;"><?php echo esc_html($hero['title']); ?></h1>
 		<p style="color:rgba(255,255,255,0.82);font-size:1.1rem;max-width:540px;margin-bottom:40px;line-height:1.7;"><?php echo esc_html($hero['subtitle']); ?></p>

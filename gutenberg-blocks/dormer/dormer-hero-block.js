@@ -162,7 +162,9 @@
                             style: {
                                 position: 'absolute',
                                 inset: 0,
-                                background: 'linear-gradient(110deg,rgba(4,4,4,0.88) 0%,rgba(4,4,4,0.55) 70%,rgba(4,4,4,0.3) 100%)',
+                                // background: 'linear-gradient(110deg,rgba(4,4,4,0.88) 0%,rgba(4,4,4,0.55) 70%,rgba(4,4,4,0.3) 100%)',
+                                backgroundColor: 'var(--wp--preset--color--palette-color-3, var(--theme-palette-color-3, #1e1e1e))',
+                                opacity: 0.66,
                             },
                         }),
                         el(

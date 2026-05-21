@@ -5,6 +5,10 @@
     var el = wp.element.createElement;
     var useBlockProps = wp.blockEditor.useBlockProps;
     var RichText = wp.blockEditor.RichText;
+    var InspectorControls = wp.blockEditor.InspectorControls;
+    var PanelBody = wp.components.PanelBody;
+    var TextControl = wp.components.TextControl;
+    var TextareaControl = wp.components.TextareaControl;
 
     if (typeof getBlockType === 'function' && getBlockType('myloft/dormer-planning')) return;
 
@@ -45,12 +49,63 @@
             },
             edit: function (props) {
                 var a = props.attributes;
+                var setAttributes = props.setAttributes;
                 var SSR = wp.serverSideRender && (wp.serverSideRender.default || wp.serverSideRender);
                 var blockProps = useBlockProps({ style: { margin: 0, padding: 0 } });
                 if (!SSR) {
                     return el('div', blockProps, el('p', { style: { padding: '1em', color: '#666' } }, 'Dormer Planning — preview requires ServerSideRender'));
                 }
-                return el('div', blockProps, el(SSR, { block: 'myloft/dormer-planning', attributes: props.attributes }));
+
+                function setAttr(key, v) { var o = {}; o[key] = v; setAttributes(o); }
+
+                function textItem(key) {
+                    return el(TextControl, {
+                        label: key,
+                        value: a[key] || '',
+                        onChange: function (v) { setAttr(key, v); }
+                    });
+                }
+
+                function regPanel(i, initialOpen) {
+                    var badgeKey = 'reg' + i + 'Badge';
+                    var titleKey = 'reg' + i + 'Title';
+                    var descKey = 'reg' + i + 'Desc';
+                    return el(PanelBody, { title: 'Regulation ' + i, initialOpen: !!initialOpen },
+                        el(TextControl, { label: 'Badge', value: a[badgeKey] || '', onChange: function (v) { setAttr(badgeKey, v); } }),
+                        el(TextControl, { label: 'Title', value: a[titleKey] || '', onChange: function (v) { setAttr(titleKey, v); } }),
+                        el(TextareaControl, { label: 'Description', value: a[descKey] || '', rows: 3, onChange: function (v) { setAttr(descKey, v); } })
+                    );
+                }
+
+                return el('div', blockProps,
+                    el(InspectorControls, {},
+                        el(PanelBody, { title: 'Section Content', initialOpen: true },
+                            el(TextControl, { label: 'Eyebrow', value: a.eyebrow || '', onChange: function (v) { setAttr('eyebrow', v); } }),
+                            el(TextControl, { label: 'Heading', value: a.h2 || '', onChange: function (v) { setAttr('h2', v); } }),
+                            el(TextareaControl, { label: 'Intro', value: a.intro || '', rows: 3, onChange: function (v) { setAttr('intro', v); } }),
+                            el(TextareaControl, { label: 'Footnote', value: a.footnote || '', rows: 3, onChange: function (v) { setAttr('footnote', v); } })
+                        ),
+                        el(PanelBody, { title: 'Permitted Development (No Planning)', initialOpen: false },
+                            el(TextControl, { label: 'Item 1', value: a.noPlan1 || '', onChange: function (v) { setAttr('noPlan1', v); } }),
+                            el(TextControl, { label: 'Item 2', value: a.noPlan2 || '', onChange: function (v) { setAttr('noPlan2', v); } }),
+                            el(TextControl, { label: 'Item 3', value: a.noPlan3 || '', onChange: function (v) { setAttr('noPlan3', v); } }),
+                            el(TextControl, { label: 'Item 4', value: a.noPlan4 || '', onChange: function (v) { setAttr('noPlan4', v); } }),
+                            el(TextControl, { label: 'Item 5', value: a.noPlan5 || '', onChange: function (v) { setAttr('noPlan5', v); } })
+                        ),
+                        el(PanelBody, { title: 'Planning Required', initialOpen: false },
+                            el(TextControl, { label: 'Item 1', value: a.planReq1 || '', onChange: function (v) { setAttr('planReq1', v); } }),
+                            el(TextControl, { label: 'Item 2', value: a.planReq2 || '', onChange: function (v) { setAttr('planReq2', v); } }),
+                            el(TextControl, { label: 'Item 3', value: a.planReq3 || '', onChange: function (v) { setAttr('planReq3', v); } }),
+                            el(TextControl, { label: 'Item 4', value: a.planReq4 || '', onChange: function (v) { setAttr('planReq4', v); } }),
+                            el(TextControl, { label: 'Item 5', value: a.planReq5 || '', onChange: function (v) { setAttr('planReq5', v); } })
+                        ),
+                        regPanel(1, false),
+                        regPanel(2, false),
+                        regPanel(3, false),
+                        regPanel(4, false)
+                    ),
+                    el(SSR, { block: 'myloft/dormer-planning', attributes: a })
+                );
             },
             save: function () { return null; },
         });

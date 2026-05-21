@@ -21,6 +21,19 @@
 .wp-block-myloft-dormer-hero {
 
     margin-block-end: 0 !important;
+    width: 100vw !important;
+    max-width: 100vw !important;
+    margin-left: calc(50% - 50vw) !important;
+    margin-right: calc(50% - 50vw) !important;
+
+}
+
+.is-layout-constrained > .wp-block-myloft-dormer-hero {
+
+    width: 100vw !important;
+    max-width: 100vw !important;
+    margin-left: calc(50% - 50vw) !important;
+    margin-right: calc(50% - 50vw) !important;
 
 }
 

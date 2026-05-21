@@ -8,6 +8,7 @@
     var InspectorControls = wp.blockEditor.InspectorControls;
     var PanelBody = wp.components.PanelBody;
     var TextControl = wp.components.TextControl;
+    var TextareaControl = wp.components.TextareaControl;
     var Button = wp.components.Button;
 
     if (typeof getBlockType === 'function' && getBlockType('myloft/dormer-areas')) return;
@@ -99,6 +100,11 @@
                 }
                 return el('div', blockProps,
                     el(InspectorControls, {},
+                        el(PanelBody, { title: 'Section Content', initialOpen: true },
+                            el(TextControl, { label: 'Eyebrow', value: a.eyebrow || '', onChange: function (v) { setAttributes({ eyebrow: v }); } }),
+                            el(TextControl, { label: 'Heading', value: a.h2 || '', onChange: function (v) { setAttributes({ h2: v }); } }),
+                            el(TextareaControl, { label: 'Description', value: a.description || '', rows: 4, onChange: function (v) { setAttributes({ description: v }); } })
+                        ),
                         el(PanelBody, { title: 'Boroughs', initialOpen: false },
                             boroughs.map(function (b, i) {
                                 return el('div', { key: 'borough-' + i, style: { marginBottom: '16px', paddingBottom: '12px', borderBottom: '1px solid #e2e2e2' } },

@@ -6,6 +6,13 @@
  * Text Domain: blocksy
  */
 
+:is(.is-layout-flow, .is-layout-constrained) > [class*="wp-block-myloft-"],
+:is(.is-layout-flow, .is-layout-constrained) > .dormer-loft-blocks,
+:is(.is-layout-flow, .is-layout-constrained) > .single-area-blocks,
+:is(.is-layout-flow, .is-layout-constrained) > .myloft-areas {
+	margin-block-end: 0 !important;
+}
+
 .myloft-areas {
 	--myloft-color-black: #040404;
 	--myloft-color-orange: var(--theme-palette-color-1, #ab9867);
@@ -491,4 +498,20 @@
 .entry-card.type-project {
     max-width: var(--theme-narrow-container-max-width);
     margin: 0 auto;
+}
+
+/*News*/
+.blog .entry-header p {
+	max-width: 540px;
+}
+
+#gspb_image-id-gsbp-221131b img {
+    width: 350px !important;
+}
+
+/*Global*/
+.constrained {
+	max-width: 1290px !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
 }

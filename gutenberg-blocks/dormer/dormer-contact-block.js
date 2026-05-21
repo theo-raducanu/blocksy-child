@@ -11,6 +11,7 @@
     var PanelBody = wp.components.PanelBody;
     var Button = wp.components.Button;
     var TextControl = wp.components.TextControl;
+    var TextareaControl = wp.components.TextareaControl;
 
     if (typeof getBlockType === 'function' && getBlockType('myloft/dormer-contact')) return;
 
@@ -42,7 +43,11 @@
                 }
                 return el('div', blockProps,
                     el(InspectorControls, {},
-                        el(PanelBody, { title: 'Background Image', initialOpen: true },
+                        el(PanelBody, { title: 'Section Content', initialOpen: true },
+                            el(TextControl, { label: 'Eyebrow', value: a.eyebrow || '', onChange: function (v) { setAttributes({ eyebrow: v }); } }),
+                            el(TextareaControl, { label: 'Heading (H2)', value: a.h2 || '', rows: 3, onChange: function (v) { setAttributes({ h2: v }); } })
+                        ),
+                        el(PanelBody, { title: 'Background Image', initialOpen: false },
                             el(MediaUploadCheck, {},
                                 el(MediaUpload, {
                                     onSelect: function (media) { setAttributes({ bgImageId: media.id, bgImageUrl: media.url, bgImageAlt: media.alt || '' }); },
@@ -55,7 +60,9 @@
                             el(TextControl, { label: 'Alt Text', value: a.bgImageAlt, onChange: function (v) { setAttributes({ bgImageAlt: v }); } })
                         ),
                         el(PanelBody, { title: 'CTA Links', initialOpen: false },
+                            el(TextControl, { label: 'CTA 1 Text', value: a.cta1Text || '', onChange: function (v) { setAttributes({ cta1Text: v }); } }),
                             el(TextControl, { label: 'CTA 1 URL', value: a.cta1Url, onChange: function (v) { setAttributes({ cta1Url: v }); } }),
+                            el(TextControl, { label: 'CTA 2 Text', value: a.cta2Text || '', onChange: function (v) { setAttributes({ cta2Text: v }); } }),
                             el(TextControl, { label: 'CTA 2 URL', value: a.cta2Url, onChange: function (v) { setAttributes({ cta2Url: v }); } })
                         )
                     ),

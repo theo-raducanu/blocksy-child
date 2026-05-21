@@ -11,6 +11,7 @@
     var PanelBody = wp.components.PanelBody;
     var Button = wp.components.Button;
     var TextControl = wp.components.TextControl;
+    var TextareaControl = wp.components.TextareaControl;
 
     if (typeof getBlockType === 'function' && getBlockType('myloft/dormer-projects')) return;
 
@@ -62,7 +63,11 @@
                 }
                 return el('div', blockProps,
                     el(InspectorControls, {},
-                        el(PanelBody, { title: 'Project Images', initialOpen: true },
+                        el(PanelBody, { title: 'Section Content', initialOpen: true },
+                            el(TextControl, { label: 'Eyebrow', value: a.eyebrow || '', onChange: function (v) { setAttributes({ eyebrow: v }); } }),
+                            el(TextControl, { label: 'Heading', value: a.h2 || '', onChange: function (v) { setAttributes({ h2: v }); } })
+                        ),
+                        el(PanelBody, { title: 'Project Images', initialOpen: false },
                             projects.map(function (p) {
                                 return el('div', { key: p.prefix, style: { marginBottom: '16px' } },
                                     el('strong', {}, p.defaultTitle),
@@ -79,8 +84,22 @@
                                 );
                             })
                         ),
-                        el(PanelBody, { title: 'View All URL', initialOpen: false },
-                            el(TextControl, { label: 'URL', value: a.viewAllUrl, onChange: function (v) { setAttributes({ viewAllUrl: v }); } })
+                        projects.map(function (p, idx) {
+                            return el(PanelBody, { key: 'panel-' + p.prefix, title: 'Project ' + (idx + 1) + ' Text', initialOpen: false },
+                                el(TextControl, { label: 'Title', value: a[p.prefix + 'Title'] || '', onChange: function (v) { var u = {}; u[p.prefix + 'Title'] = v; setAttributes(u); } }),
+                                el(TextControl, { label: 'Detail', value: a[p.prefix + 'Detail'] || '', onChange: function (v) { var u = {}; u[p.prefix + 'Detail'] = v; setAttributes(u); } })
+                            );
+                        }),
+                        testimonials.map(function (t, idx) {
+                            return el(PanelBody, { key: 'panel-' + t.prefix, title: 'Testimonial ' + (idx + 1), initialOpen: false },
+                                el(TextareaControl, { label: 'Quote', value: a[t.prefix + 'Quote'] || '', rows: 3, onChange: function (v) { var u = {}; u[t.prefix + 'Quote'] = v; setAttributes(u); } }),
+                                el(TextControl, { label: 'Name', value: a[t.prefix + 'Name'] || '', onChange: function (v) { var u = {}; u[t.prefix + 'Name'] = v; setAttributes(u); } }),
+                                el(TextControl, { label: 'Location / Collection', value: a[t.prefix + 'Loc'] || '', onChange: function (v) { var u = {}; u[t.prefix + 'Loc'] = v; setAttributes(u); } })
+                            );
+                        }),
+                        el(PanelBody, { title: 'View All Link', initialOpen: false },
+                            el(TextControl, { label: 'Link Text', value: a.viewAllText || '', onChange: function (v) { setAttributes({ viewAllText: v }); } }),
+                            el(TextControl, { label: 'URL', value: a.viewAllUrl || '', onChange: function (v) { setAttributes({ viewAllUrl: v }); } })
                         )
                     ),
                     el(SSR, { block: 'myloft/dormer-projects', attributes: a })

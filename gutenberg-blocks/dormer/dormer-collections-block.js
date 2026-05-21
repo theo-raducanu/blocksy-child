@@ -11,6 +11,7 @@
     var PanelBody = wp.components.PanelBody;
     var Button = wp.components.Button;
     var TextControl = wp.components.TextControl;
+    var TextareaControl = wp.components.TextareaControl;
 
     if (typeof getBlockType === 'function' && getBlockType('myloft/dormer-collections')) return;
 
@@ -57,27 +58,38 @@
                 if (!SSR) {
                     return el('div', blockProps, el('p', { style: { padding: '1em', color: '#666' } }, 'Dormer Collections — preview requires ServerSideRender'));
                 }
+                function makeSetter(key) {
+                    return function (v) { var u = {}; u[key] = v; setAttributes(u); };
+                }
                 return el('div', blockProps,
                     el(InspectorControls, {},
-                        el(PanelBody, { title: 'Collection Images', initialOpen: true },
-                            collections.map(function (c) {
-                                return el('div', { key: c.prefix, style: { marginBottom: '16px' } },
-                                    el('strong', {}, c.defaultName),
-                                    el(MediaUploadCheck, {},
-                                        el(MediaUpload, {
-                                            onSelect: function (media) { var u = {}; u[c.prefix + 'ImageId'] = media.id; u[c.prefix + 'ImageUrl'] = media.url; u[c.prefix + 'ImageAlt'] = media.alt || ''; setAttributes(u); },
-                                            allowedTypes: ['image'],
-                                            value: a[c.prefix + 'ImageId'],
-                                            render: function (ref) { return el(Button, { onClick: ref.open, isSecondary: true, style: { display: 'block', width: '100%', marginTop: '4px' } }, a[c.prefix + 'ImageUrl'] ? 'Change Image' : 'Select Image'); }
-                                        })
-                                    ),
-                                    a[c.prefix + 'ImageUrl'] && el('img', { src: a[c.prefix + 'ImageUrl'], style: { width: '100%', marginTop: '4px', borderRadius: '4px' } }),
-                                    el(TextControl, { label: 'Alt', value: a[c.prefix + 'ImageAlt'], onChange: function (v) { var u = {}; u[c.prefix + 'ImageAlt'] = v; setAttributes(u); } })
-                                );
-                            })
+                        el(PanelBody, { title: 'Section Content', initialOpen: true },
+                            el(TextControl, { label: 'Eyebrow', value: a.eyebrow || '', onChange: function (v) { setAttributes({ eyebrow: v }); } }),
+                            el(TextareaControl, { label: 'Heading (H2)', value: a.h2 || '', rows: 3, onChange: function (v) { setAttributes({ h2: v }); } }),
+                            el(TextareaControl, { label: 'Intro', value: a.intro || '', rows: 3, onChange: function (v) { setAttributes({ intro: v }); } })
                         ),
+                        collections.map(function (c, idx) {
+                            return el(PanelBody, { key: 'panel-' + c.prefix, title: 'Collection ' + (idx + 1) + ' – ' + c.defaultName, initialOpen: false },
+                                el(TextControl, { label: 'Designer', value: a[c.prefix + 'Designer'] || '', onChange: makeSetter(c.prefix + 'Designer') }),
+                                el(TextControl, { label: 'Name', value: a[c.prefix + 'Name'] || '', onChange: makeSetter(c.prefix + 'Name') }),
+                                el(TextareaControl, { label: 'Description', value: a[c.prefix + 'Desc'] || '', rows: 3, onChange: makeSetter(c.prefix + 'Desc') }),
+                                el(TextControl, { label: 'Price', value: a[c.prefix + 'Price'] || '', onChange: makeSetter(c.prefix + 'Price') }),
+                                el(MediaUploadCheck, {},
+                                    el(MediaUpload, {
+                                        onSelect: function (media) { var u = {}; u[c.prefix + 'ImageId'] = media.id; u[c.prefix + 'ImageUrl'] = media.url; u[c.prefix + 'ImageAlt'] = media.alt || ''; setAttributes(u); },
+                                        allowedTypes: ['image'],
+                                        value: a[c.prefix + 'ImageId'],
+                                        render: function (ref) { return el(Button, { onClick: ref.open, isSecondary: true, style: { display: 'block', width: '100%', marginTop: '4px' } }, a[c.prefix + 'ImageUrl'] ? 'Change Image' : 'Select Image'); }
+                                    })
+                                ),
+                                a[c.prefix + 'ImageUrl'] && el('img', { src: a[c.prefix + 'ImageUrl'], style: { width: '100%', marginTop: '4px', borderRadius: '4px' } }),
+                                el(TextControl, { label: 'Alt', value: a[c.prefix + 'ImageAlt'], onChange: makeSetter(c.prefix + 'ImageAlt') })
+                            );
+                        }),
                         el(PanelBody, { title: 'CTAs', initialOpen: false },
+                            el(TextControl, { label: 'CTA 1 Text', value: a.cta1Text || '', onChange: function (v) { setAttributes({ cta1Text: v }); } }),
                             el(TextControl, { label: 'CTA 1 URL', value: a.cta1Url, onChange: function (v) { setAttributes({ cta1Url: v }); } }),
+                            el(TextControl, { label: 'CTA 2 Text', value: a.cta2Text || '', onChange: function (v) { setAttributes({ cta2Text: v }); } }),
                             el(TextControl, { label: 'CTA 2 URL', value: a.cta2Url, onChange: function (v) { setAttributes({ cta2Url: v }); } })
                         )
                     ),
