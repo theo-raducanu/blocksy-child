@@ -10,6 +10,9 @@
  body {
 	background-color: var(--wp--preset--color--palette-color-6, var(--theme-palette-color-6, #efece6));
  }
+ .wp-block-accordion-item {
+	border-color: #d2d2d2 !important;
+}
 
 :is(.is-layout-flow, .is-layout-constrained) > [class*="wp-block-myloft-"],
 :is(.is-layout-flow, .is-layout-constrained) > .dormer-loft-blocks,
