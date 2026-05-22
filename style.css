@@ -13,6 +13,12 @@
  .wp-block-accordion-item {
 	border-color: #d2d2d2 !important;
 }
+@media (max-width: 768px) {
+	.info-bar__grid {
+		grid-template-columns: repeat(3, 1fr) !important;
+		align-items: baseline !important;
+	}
+}
 
 :is(.is-layout-flow, .is-layout-constrained) > [class*="wp-block-myloft-"],
 :is(.is-layout-flow, .is-layout-constrained) > .dormer-loft-blocks,

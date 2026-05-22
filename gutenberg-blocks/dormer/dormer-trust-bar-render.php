@@ -21,9 +21,9 @@ for ( $i = 1; $i <= 6; $i++ ) {
 	$stats[] = [ 'label' => $a[ 'stat' . $i . 'Label' ], 'value' => $a[ 'stat' . $i . 'Value' ] ];
 }
 ?>
-<section class="section--dark" style="padding:40px 0;border-top:1px solid rgba(255,255,255,0.07);">
+<section class="section--dark info-bar" style="padding:40px 0;border-top:1px solid rgba(255,255,255,0.07);">
 	<div class="wrap" style="width:var(--theme-container-width,1200px);max-width:var(--theme-normal-container-max-width,1200px);">
-		<div style="display:grid;grid-template-columns:repeat(6,1fr);gap:16px;align-items:center;justify-items:center;">
+		<div class="info-bar__grid" style="display:grid;grid-template-columns:repeat(6,1fr);gap:16px;align-items:center;justify-items:center;">
 			<?php foreach ( $stats as $stat ) : ?>
 			<div style="text-align:center;">
 				<div style="font-size:0.62rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--color-grey-icon);margin-bottom:3px;"><?php echo esc_html( $stat['label'] ); ?></div>

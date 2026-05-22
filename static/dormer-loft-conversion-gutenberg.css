@@ -859,8 +859,16 @@
 .dormer-loft-blocks #pricing .price-table {
 
       min-width: 620px;
-    
+
 }
 
-  
+/* Trust bar: 3 stats per row on mobile (overrides inline 6-col grid). */
+.dormer-loft-blocks .section--dark > .wrap > [style*="repeat(6,1fr)"] {
+
+      grid-template-columns: repeat(3, 1fr) !important;
+      gap: 20px 12px !important;
+
+}
+
+
 }
