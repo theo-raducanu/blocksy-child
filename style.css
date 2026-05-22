@@ -27,7 +27,6 @@
 	--myloft-color-muted: rgba(255, 255, 255, 0.84);
 	--myloft-card-radius: 30px;
 	--myloft-wrap-width: 1200px;
-	background: var(--myloft-color-off-white);
 	color: #111;
 }
 
@@ -262,7 +261,6 @@
 }
 
 .myloft-areas__section {
-	background: var(--myloft-color-off-white);
 	padding-top: 90px;
 	padding-bottom: 0;
 }
@@ -364,7 +362,7 @@
 	border: 1px solid #977a4a4d;
 	font-size: 0.84rem;
 	font-weight: 700;
-	color: #224117;
+	color: #ab9863;
 	transition: all 0.2s ease;
 	text-decoration: none;
 }
