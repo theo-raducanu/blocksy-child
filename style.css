@@ -19,6 +19,9 @@
 		align-items: baseline !important;
 	}
 }
+[data-footer*="type-1"] .ct-footer {
+    background-image: none !important;
+}
 
 :is(.is-layout-flow, .is-layout-constrained) > [class*="wp-block-myloft-"],
 :is(.is-layout-flow, .is-layout-constrained) > .dormer-loft-blocks,
