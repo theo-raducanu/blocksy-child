@@ -6,6 +6,11 @@
  * Text Domain: blocksy
  */
 
+ /*Global*/
+ body {
+	background-color: var(--wp--preset--color--palette-color-6, var(--theme-palette-color-6, #efece6));
+ }
+
 :is(.is-layout-flow, .is-layout-constrained) > [class*="wp-block-myloft-"],
 :is(.is-layout-flow, .is-layout-constrained) > .dormer-loft-blocks,
 :is(.is-layout-flow, .is-layout-constrained) > .single-area-blocks,
@@ -355,8 +360,8 @@
 	align-items: center;
 	padding: 8px 14px;
 	border-radius: 999px;
-	background: #e8f2e3;
-	border: 1px solid #cfe2c5;
+	background: #977a4a24;
+	border: 1px solid #977a4a4d;
 	font-size: 0.84rem;
 	font-weight: 700;
 	color: #224117;
@@ -483,7 +488,7 @@
 
 /*Contact custom background*/
 .page-id-18 .entry-content {
-    background-color: #e5e0d6;
+    background-color: #efece6;
 }
 
 /* Match related projects module width with single project content width */

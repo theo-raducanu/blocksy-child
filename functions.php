@@ -1259,3 +1259,45 @@ function blocksy_child_project_meta_layout_override($values, $post_id) {
 }
 
 add_filter('blocksy:posts:meta:values', 'blocksy_child_project_meta_layout_override', 20, 2);
+
+/**
+ * Remove sidebar on the blog index and single post pages so they match the
+ * portfolio (project) layout.
+ */
+function blocksy_child_post_sidebar_position($position) {
+	if (is_home() || is_singular('post')) {
+		return 'none';
+	}
+
+	return $position;
+}
+
+add_filter('blocksy:general:sidebar-position', 'blocksy_child_post_sidebar_position', 20);
+
+/**
+ * Center the blog index and single post content in the narrow layout that the
+ * portfolio pages use.
+ */
+function blocksy_child_post_page_structure($structure) {
+	if (is_home() || is_singular('post')) {
+		return 'type-3';
+	}
+
+	return $structure;
+}
+
+add_filter('blocksy:global:page_structure', 'blocksy_child_post_page_structure', 20);
+
+/**
+ * Ensure single posts always use the centered single structure, even if
+ * Blocksy post meta has a different saved value.
+ */
+function blocksy_child_post_meta_layout_override($values, $post_id) {
+	if (get_post_type($post_id) === 'post') {
+		$values['page_structure_type'] = 'type-3';
+	}
+
+	return $values;
+}
+
+add_filter('blocksy:posts:meta:values', 'blocksy_child_post_meta_layout_override', 20, 2);

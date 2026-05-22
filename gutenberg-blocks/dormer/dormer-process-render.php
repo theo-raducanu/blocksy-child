@@ -55,7 +55,7 @@ for ( $i = 1; $i <= 4; $i++ ) {
 					</div>
 				</div>
 				<?php endforeach; ?>
-				<div style="margin-top:28px;background:#e5e0d6;border:1px solid rgba(253,83,32,0.2);border-radius:16px;padding:20px 24px;">
+				<div style="margin-top:28px;background:#efece6;border:1px solid rgba(253,83,32,0.2);border-radius:16px;padding:20px 24px;">
 					<p style="color:#5a5a5a;font-size:0.875rem;font-weight:600;margin-bottom:6px;"><?php echo esc_html( $a['whyFasterTitle'] ); ?></p>
 					<p style="color:#5a5a5a;font-size:0.82rem;"><?php echo esc_html( $a['whyFasterBody'] ); ?></p>
 				</div>
