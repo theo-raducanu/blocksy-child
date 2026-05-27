@@ -3,6 +3,7 @@ defined( 'ABSPATH' ) || exit;
 $defaults = [
 	'eyebrow'       => 'Timeline & Process',
 	'h2'            => 'Building a Dormer Loft Conversion: What to Expect',
+	'intro'         => '',
 	'tl1Weeks'      => 'Wks 1–2',
 	'tl1Phase'      => 'Structural Phase',
 	'tl1Desc'       => 'Scaffold, roof opening, steelwork, dormer frame construction.',
@@ -42,6 +43,9 @@ for ( $i = 1; $i <= 4; $i++ ) {
 		<div style="text-align:center;margin-bottom:56px;">
 			<span class="eyebrow"><?php echo esc_html( $a['eyebrow'] ); ?></span>
 			<h2 style="color:#fff;"><?php echo esc_html( $a['h2'] ); ?></h2>
+			<?php if ( ! empty( $a['intro'] ) ) : ?>
+			<p class="section-intro" style="color:rgba(255,255,255,0.7);max-width:720px;margin:16px auto 0;font-size:1rem;line-height:1.6;"><?php echo esc_html( $a['intro'] ); ?></p>
+			<?php endif; ?>
 		</div>
 		<div class="grid-2" style="gap:64px;align-items:flex-start;">
 			<div>

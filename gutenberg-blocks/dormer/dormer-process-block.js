@@ -22,6 +22,7 @@
             attributes: {
                 eyebrow: { type: 'string', default: 'Timeline & Process' },
                 h2: { type: 'string', default: 'Building a Dormer Loft Conversion: What to Expect' },
+                intro: { type: 'string', default: '' },
                 tl1Weeks: { type: 'string', default: 'Wks 1–2' },
                 tl1Phase: { type: 'string', default: 'Structural Phase' },
                 tl1Desc: { type: 'string', default: 'Scaffold, roof opening, steelwork, dormer frame construction.' },
@@ -69,7 +70,8 @@
                     el(InspectorControls, {},
                         el(PanelBody, { title: 'Section Content', initialOpen: true },
                             el(TextControl, { label: 'Eyebrow', value: a.eyebrow || '', onChange: function (v) { setAttributes({ eyebrow: v }); } }),
-                            el(TextControl, { label: 'Heading', value: a.h2 || '', onChange: function (v) { setAttributes({ h2: v }); } })
+                            el(TextControl, { label: 'Heading', value: a.h2 || '', onChange: function (v) { setAttributes({ h2: v }); } }),
+                            el(TextareaControl, { label: 'Intro Paragraph (optional)', value: a.intro || '', rows: 3, onChange: function (v) { setAttributes({ intro: v }); } })
                         ),
                         el(PanelBody, { title: 'Timeline Item 1', initialOpen: false },
                             el(TextControl, { label: 'Weeks', value: a.tl1Weeks || '', onChange: function (v) { setAttributes({ tl1Weeks: v }); } }),

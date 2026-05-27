@@ -24,6 +24,7 @@
             attributes: {
                 eyebrow: { type: 'string', default: 'Timeline & Process' },
                 h2: { type: 'string', default: 'Building a Dormer Loft Conversion: What to Expect' },
+                intro: { type: 'string', default: '' },
                 imageId: { type: 'number', default: 0 },
                 imageUrl: { type: 'string', default: '' },
                 imageAlt: { type: 'string', default: '' },
@@ -60,7 +61,8 @@
                     el(InspectorControls, {},
                         el(PanelBody, { title: 'Section Content', initialOpen: true },
                             el(TextControl, { label: 'Eyebrow', value: a.eyebrow || '', onChange: function (v) { setAttributes({ eyebrow: v }); } }),
-                            el(TextControl, { label: 'Heading', value: a.h2 || '', onChange: function (v) { setAttributes({ h2: v }); } })
+                            el(TextControl, { label: 'Heading', value: a.h2 || '', onChange: function (v) { setAttributes({ h2: v }); } }),
+                            el(TextareaControl, { label: 'Intro Paragraph (optional)', value: a.intro || '', rows: 3, onChange: function (v) { setAttributes({ intro: v }); } })
                         ),
                         el(PanelBody, { title: 'Image (Left Column)', initialOpen: false },
                             el(MediaUploadCheck, {},

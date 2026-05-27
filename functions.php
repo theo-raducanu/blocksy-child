@@ -406,6 +406,7 @@ function blocksy_child_register_dormer_process_block() {
 	$attrs = [
 		'eyebrow'        => ['type' => 'string', 'default' => ''],
 		'h2'             => ['type' => 'string', 'default' => ''],
+		'intro'          => ['type' => 'string', 'default' => ''],
 		'whyFasterTitle' => ['type' => 'string', 'default' => ''],
 		'whyFasterBody'  => ['type' => 'string', 'default' => ''],
 		'cta1Text' => ['type' => 'string', 'default' => ''], 'cta1Url' => ['type' => 'string', 'default' => ''],
@@ -439,6 +440,7 @@ function blocksy_child_register_dormer_process_image_block() {
 	$attrs = [
 		'eyebrow'  => ['type' => 'string', 'default' => ''],
 		'h2'       => ['type' => 'string', 'default' => ''],
+		'intro'    => ['type' => 'string', 'default' => ''],
 		'imageId'  => ['type' => 'number', 'default' => 0],
 		'imageUrl' => ['type' => 'string', 'default' => ''],
 		'imageAlt' => ['type' => 'string', 'default' => ''],
