@@ -78,7 +78,7 @@ if ( empty( $faqs ) ) {
 				$item_style = ( $index === count( $faqs ) - 1 ) ? ' style="border-bottom:none;"' : '';
 				?>
 				<div class="<?php echo esc_attr( $item_classes ); ?>"<?php echo $item_style; ?>>
-					<div class="faq-q" onclick="this.closest('.faq-item').classList.toggle('open')"><?php echo esc_html( $row['question'] ); ?><span class="faq-toggle"></span></div>
+					<h3 class="faq-q" onclick="this.closest('.faq-item').classList.toggle('open')"><?php echo esc_html( $row['question'] ); ?><span class="faq-toggle"></span></h3>
 					<div class="faq-a"><?php echo esc_html( $row['answer'] ); ?></div>
 				</div>
 				<?php endforeach; ?>

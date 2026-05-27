@@ -22,6 +22,9 @@
 [data-footer*="type-1"] .ct-footer {
     background-image: none !important;
 }
+:where(.wp-block-columns) {
+    margin-bottom: 0 !important;
+}
 
 :is(.is-layout-flow, .is-layout-constrained) > [class*="wp-block-myloft-"],
 :is(.is-layout-flow, .is-layout-constrained) > .dormer-loft-blocks,

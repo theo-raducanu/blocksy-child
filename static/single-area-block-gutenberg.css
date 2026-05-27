@@ -281,6 +281,15 @@
         padding: 14px 34px 14px 0;
     }
 
+    .single-area-blocks .planning-accordion-title{
+        margin: 0;
+        padding: 0;
+        font: inherit;
+        color: inherit;
+        line-height: inherit;
+        display: inline;
+    }
+
     .single-area-blocks .planning-accordion-summary::-webkit-details-marker{
         display: none;
     }

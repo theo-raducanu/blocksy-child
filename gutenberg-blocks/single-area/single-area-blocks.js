@@ -549,7 +549,7 @@
 
             return [
                 '<details class="planning-accordion-item"' + openAttr + '>',
-                '    <summary class="planning-accordion-summary">' + escapeHtml(row.name) + '</summary>',
+                '    <summary class="planning-accordion-summary"><h3 class="planning-accordion-title">' + escapeHtml(row.name) + '</h3></summary>',
                 '    <div class="planning-accordion-content">',
                 '        <p class="planning-accordion-meta">' + escapeHtml(row.towns) + '</p>',
                 '        <p class="planning-accordion-body">' + escapeHtml(row.notes) + '</p>',

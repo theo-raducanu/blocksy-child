@@ -424,6 +424,35 @@ function blocksy_child_register_dormer_process_block() {
 }
 add_action('init', 'blocksy_child_register_dormer_process_block', 16);
 
+function blocksy_child_render_dormer_process_image_block($attributes = []) {
+	$template = get_stylesheet_directory() . '/gutenberg-blocks/dormer/dormer-process-image-render.php';
+	if (!file_exists($template)) return '';
+	$block_attributes = is_array($attributes) ? $attributes : [];
+	ob_start(); include $template; return '<div class="dormer-loft-blocks alignfull">' . (string) ob_get_clean() . '</div>';
+}
+function blocksy_child_register_dormer_process_image_block() {
+	if (!function_exists('register_block_type')) return;
+	$script_path = get_stylesheet_directory() . '/gutenberg-blocks/dormer/dormer-process-image-block.js';
+	$script_url  = get_stylesheet_directory_uri()  . '/gutenberg-blocks/dormer/dormer-process-image-block.js';
+	if (!file_exists($script_path)) return;
+	wp_register_script('blocksy-child-dormer-process-image-block', $script_url, ['wp-blocks','wp-element','wp-block-editor','wp-components','wp-server-side-render'], filemtime($script_path), true);
+	$attrs = [
+		'eyebrow'  => ['type' => 'string', 'default' => ''],
+		'h2'       => ['type' => 'string', 'default' => ''],
+		'imageId'  => ['type' => 'number', 'default' => 0],
+		'imageUrl' => ['type' => 'string', 'default' => ''],
+		'imageAlt' => ['type' => 'string', 'default' => ''],
+		'cta1Text' => ['type' => 'string', 'default' => ''], 'cta1Url' => ['type' => 'string', 'default' => ''],
+		'cta2Text' => ['type' => 'string', 'default' => ''], 'cta2Url' => ['type' => 'string', 'default' => ''],
+	];
+	for ($i = 1; $i <= 8; $i++) {
+		$attrs['step' . $i . 'Title'] = ['type' => 'string', 'default' => ''];
+		$attrs['step' . $i . 'Desc']  = ['type' => 'string', 'default' => ''];
+	}
+	register_block_type('myloft/dormer-process-image', ['api_version' => 2, 'editor_script' => 'blocksy-child-dormer-process-image-block', 'attributes' => $attrs, 'render_callback' => 'blocksy_child_render_dormer_process_image_block']);
+}
+add_action('init', 'blocksy_child_register_dormer_process_image_block', 16);
+
 // ---------------------------------------------------------------------------
 // Section 07 — Pricing
 // ---------------------------------------------------------------------------

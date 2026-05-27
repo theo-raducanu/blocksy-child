@@ -47,7 +47,7 @@ $included = array_values( [ 'inc1','inc2','inc3','inc4','inc5','inc6','inc7','in
 		<div style="text-align:center;margin-bottom:56px;">
 			<span class="eyebrow"><?php echo esc_html( $a['eyebrow'] ); ?></span>
 			<h2 style="color:#fff;margin-bottom:12px;"><?php echo esc_html( $a['h2'] ); ?></h2>
-			<h3 style="color:var(--color-orange);font-weight:600;font-size:1.05rem;"><?php echo esc_html( $a['h3Subtitle'] ); ?></h3>
+			<h3 style="color:#fff !important;font-size:1rem !important;font-weight:400 !important;line-height:1.6 !important;letter-spacing:normal !important;text-transform:none !important;margin:0 !important;font-family:inherit !important;"><?php echo esc_html( $a['h3Subtitle'] ); ?></h3>
 		</div>
 		<div class="grid-3" style="margin-bottom:32px;">
 			<?php
