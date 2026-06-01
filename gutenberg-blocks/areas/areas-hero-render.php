@@ -15,7 +15,7 @@ $defaults = [
 
 $hero = wp_parse_args(isset($hero_attributes) && is_array($hero_attributes) ? $hero_attributes : [], $defaults);
 ?>
-<section class="section section--dark" style="padding:190px 0 80px;position:relative;overflow:hidden;">
+<section class="section section--dark myloft-area-hero" style="padding:190px 0 80px;position:relative;overflow:hidden;">
 	<div style="position:absolute;inset:0;background-image:url('<?php echo esc_url($hero['backgroundImageUrl']); ?>');background-size:cover;background-position:center;"></div>
 	<div style="position:absolute;inset:0;background:linear-gradient(100deg,rgba(4,4,4,.88) 0%,rgba(4,4,4,.58) 65%,rgba(4,4,4,.35) 100%);"></div>
 	<div class="wrap" style="position:relative;z-index:2;">

@@ -33,6 +33,17 @@
         text-decoration: none;
     }
 
+    /* Editor-inserted content links (bare <a>, no class) show in the accent
+       colour and underlined — not only on hover. Buttons/pills carry classes. */
+    .single-area-blocks a:not([class]){
+        color: var(--theme-palette-color-1, #ab9867);
+        text-decoration: underline;
+        text-underline-offset: 0.15em;
+    }
+    .single-area-blocks a:not([class]):hover{
+        color: var(--theme-palette-color-2, #8d7446);
+    }
+
     .single-area-blocks .table-wrap table, .single-area-blocks .table-wrap th, .single-area-blocks .table-wrap td{
         border-style: inherit;
         border-color: inherit;

@@ -44,7 +44,7 @@
         edit: function (props) {
             var attrs = props.attributes;
             var setAttributes = props.setAttributes;
-            var blockProps = useBlockProps({ className: 'myloft-areas-hero-editor' });
+            var blockProps = useBlockProps({ className: 'myloft-areas-hero-editor myloft-area-hero' });
 
             return el(
                 Fragment,
