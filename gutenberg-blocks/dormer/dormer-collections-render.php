@@ -34,9 +34,9 @@ $a = wp_parse_args( array_filter( $_raw, function( $v ) { return $v !== ''; } ),
 <section class="section section--light" id="collections">
 	<div class="wrap">
 		<div style="text-align:center;margin-bottom:52px;">
-			<span class="eyebrow"><?php echo esc_html( $a['eyebrow'] ); ?></span>
-			<h2 style="margin-bottom:14px;"><?php echo esc_html( $a['h2'] ); ?></h2>
-			<p style="max-width:580px;margin:0 auto;color:#5a5a5a;"><?php echo esc_html( $a['intro'] ); ?></p>
+			<span class="eyebrow"><?php echo blocksy_child_kses_inline( $a['eyebrow'] ); ?></span>
+			<h2 style="margin-bottom:14px;"><?php echo blocksy_child_kses_inline( $a['h2'] ); ?></h2>
+			<p style="max-width:580px;margin:0 auto;color:#5a5a5a;"><?php echo blocksy_child_kses_inline( $a['intro'] ); ?></p>
 		</div>
 		<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-bottom:32px;">
 			<?php for ( $i = 1; $i <= 6; $i++ ) :
@@ -45,18 +45,18 @@ $a = wp_parse_args( array_filter( $_raw, function( $v ) { return $v !== ''; } ),
 			<div class="col-card">
 				<div class="img-ph img-ph--light" style="aspect-ratio:4/3;border-radius:var(--radius-img) var(--radius-img) 0 0;background-image:url('<?php echo esc_url( $img_url ); ?>');background-size:cover;background-position:center;"></div>
 				<div class="col-card__body">
-					<div class="col-card__designer"><?php echo esc_html( $a[ 'col' . $i . 'Designer' ] ); ?></div>
-					<div class="col-card__name"><?php echo esc_html( $a[ 'col' . $i . 'Name' ] ); ?></div>
-					<div class="col-card__desc"><?php echo esc_html( $a[ 'col' . $i . 'Desc' ] ); ?></div>
-					<div class="col-card__price"><?php echo esc_html( $a[ 'col' . $i . 'Price' ] ); ?></div>
+					<div class="col-card__designer"><?php echo blocksy_child_kses_inline( $a[ 'col' . $i . 'Designer' ] ); ?></div>
+					<div class="col-card__name"><?php echo blocksy_child_kses_inline( $a[ 'col' . $i . 'Name' ] ); ?></div>
+					<div class="col-card__desc"><?php echo blocksy_child_kses_inline( $a[ 'col' . $i . 'Desc' ] ); ?></div>
+					<div class="col-card__price"><?php echo blocksy_child_kses_inline( $a[ 'col' . $i . 'Price' ] ); ?></div>
 				</div>
 			</div>
 			<?php endfor; ?>
 		</div>
 		<div style="text-align:center;">
-			<a href="<?php echo esc_url( $a['cta1Url'] ); ?>" class="btn-cta btn-cta--solid"><?php echo esc_html( $a['cta1Text'] ); ?></a>
+			<a href="<?php echo esc_url( $a['cta1Url'] ); ?>" class="btn-cta btn-cta--solid"><?php echo blocksy_child_kses_inline( $a['cta1Text'] ); ?></a>
 			&nbsp;&nbsp;
-			<a href="<?php echo esc_url( $a['cta2Url'] ); ?>" class="btn btn--dark"><?php echo esc_html( $a['cta2Text'] ); ?></a>
+			<a href="<?php echo esc_url( $a['cta2Url'] ); ?>" class="btn btn--dark"><?php echo blocksy_child_kses_inline( $a['cta2Text'] ); ?></a>
 		</div>
 	</div>
 </section>

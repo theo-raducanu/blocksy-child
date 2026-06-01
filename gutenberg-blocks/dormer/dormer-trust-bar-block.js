@@ -5,10 +5,32 @@
     var el = wp.element.createElement;
     var useBlockProps = wp.blockEditor.useBlockProps;
     var RichText = wp.blockEditor.RichText;
+    var MediaUpload = wp.blockEditor.MediaUpload;
+    var MediaUploadCheck = wp.blockEditor.MediaUploadCheck;
     var InspectorControls = wp.blockEditor.InspectorControls;
     var PanelBody = wp.components.PanelBody;
+    var Button = wp.components.Button;
     var TextControl = wp.components.TextControl;
     var TextareaControl = wp.components.TextareaControl;
+
+    // Inline editable RichText rendered on the canvas. Restrictive by design:
+    // the editor can only change text, never the layout/structure. opts.plain
+    // (headings, labels, buttons) allows no formatting; otherwise links + bold/italic.
+    function rt(tagName, value, onChange, opts) {
+        opts = opts || {};
+        var props = {
+            tagName: tagName,
+            value: typeof value === 'string' ? value : '',
+            onChange: onChange,
+            allowedFormats: opts.plain ? [] : ['core/bold', 'core/italic', 'core/link']
+        };
+        if (opts.className) { props.className = opts.className; }
+        if (opts.style) { props.style = opts.style; }
+        if (opts.placeholder) { props.placeholder = opts.placeholder; }
+        if (opts.key) { props.key = opts.key; }
+        if (opts.href) { props.href = opts.href; }
+        return el(RichText, props);
+    }
 
     if (typeof getBlockType === 'function' && getBlockType('myloft/dormer-trust-bar')) return;
 
@@ -36,11 +58,8 @@
             edit: function (props) {
                 var a = props.attributes;
                 var setAttributes = props.setAttributes;
-                var SSR = wp.serverSideRender && (wp.serverSideRender.default || wp.serverSideRender);
                 var blockProps = useBlockProps({ className: 'dormer-loft-blocks alignfull', style: { margin: 0, padding: 0 } });
-                if (!SSR) {
-                    return el('div', blockProps, el('p', { style: { padding: '1em', color: '#666' } }, 'Trust Bar — preview requires ServerSideRender'));
-                }
+                function set(key) { return function (v) { var u = {}; u[key] = v; setAttributes(u); }; }
 
                 function statPanel(i, initialOpen) {
                     var labelKey = 'stat' + i + 'Label';
@@ -59,6 +78,16 @@
                     );
                 }
 
+                var stats = [];
+                for (var i = 1; i <= 6; i++) {
+                    stats.push(
+                        el('div', { key: 'stat-' + i, style: { textAlign: 'center' } },
+                            rt('div', a['stat' + i + 'Label'], set('stat' + i + 'Label'), { plain: true, style: { fontSize: '0.62rem', letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--color-grey-icon)', marginBottom: '3px' }, placeholder: 'Label ' + i }),
+                            rt('div', a['stat' + i + 'Value'], set('stat' + i + 'Value'), { plain: true, style: { fontSize: '0.95rem', fontWeight: '800', color: 'var(--color-grey-icon)' }, placeholder: 'Value ' + i })
+                        )
+                    );
+                }
+
                 return el('div', blockProps,
                     el(InspectorControls, {},
                         statPanel(1, true),
@@ -68,7 +97,13 @@
                         statPanel(5, false),
                         statPanel(6, false)
                     ),
-                    el(SSR, { block: 'myloft/dormer-trust-bar', attributes: a })
+                    el('section', { className: 'section--dark info-bar', style: { padding: '40px 0', borderTop: '1px solid rgba(255,255,255,0.07)' } },
+                        el('div', { className: 'wrap', style: { width: 'var(--theme-container-width,1200px)', maxWidth: 'var(--theme-normal-container-max-width,1200px)' } },
+                            el('div', { className: 'info-bar__grid', style: { display: 'grid', gridTemplateColumns: 'repeat(6,1fr)', gap: '16px', alignItems: 'center', justifyItems: 'center' } },
+                                stats
+                            )
+                        )
+                    )
                 );
             },
             save: function () { return null; },

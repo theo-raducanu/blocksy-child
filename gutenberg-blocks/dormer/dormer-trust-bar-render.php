@@ -26,8 +26,8 @@ for ( $i = 1; $i <= 6; $i++ ) {
 		<div class="info-bar__grid" style="display:grid;grid-template-columns:repeat(6,1fr);gap:16px;align-items:center;justify-items:center;">
 			<?php foreach ( $stats as $stat ) : ?>
 			<div style="text-align:center;">
-				<div style="font-size:0.62rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--color-grey-icon);margin-bottom:3px;"><?php echo esc_html( $stat['label'] ); ?></div>
-				<div style="font-size:0.95rem;font-weight:800;color:var(--color-grey-icon)"><?php echo esc_html( $stat['value'] ); ?></div>
+				<div style="font-size:0.62rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--color-grey-icon);margin-bottom:3px;"><?php echo blocksy_child_kses_inline( $stat['label'] ); ?></div>
+				<div style="font-size:0.95rem;font-weight:800;color:var(--color-grey-icon)"><?php echo blocksy_child_kses_inline( $stat['value'] ); ?></div>
 			</div>
 			<?php endforeach; ?>
 		</div>

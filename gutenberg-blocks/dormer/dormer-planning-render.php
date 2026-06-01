@@ -34,9 +34,9 @@ $a = wp_parse_args( array_filter( $_raw, function( $v ) { return $v !== ''; } ),
 <section class="section section--light" id="planning">
 	<div class="wrap">
 		<div style="text-align:center;margin-bottom:52px;">
-			<span class="eyebrow"><?php echo esc_html( $a['eyebrow'] ); ?></span>
-			<h2 style="margin-bottom:12px;"><?php echo esc_html( $a['h2'] ); ?></h2>
-			<p style="max-width:560px;margin:0 auto;color:#5a5a5a;"><?php echo esc_html( $a['intro'] ); ?></p>
+			<span class="eyebrow"><?php echo blocksy_child_kses_inline( $a['eyebrow'] ); ?></span>
+			<h2 style="margin-bottom:12px;"><?php echo blocksy_child_kses_inline( $a['h2'] ); ?></h2>
+			<p style="max-width:560px;margin:0 auto;color:#5a5a5a;"><?php echo blocksy_child_kses_inline( $a['intro'] ); ?></p>
 		</div>
 		<div class="grid-2" style="gap:36px;align-items:flex-start;">
 			<div style="background:var(--color-black);border-radius:var(--radius-card);padding:32px;overflow:hidden;">
@@ -45,21 +45,21 @@ $a = wp_parse_args( array_filter( $_raw, function( $v ) { return $v !== ''; } ),
 					<div style="background:#1e1e1e;padding:12px 16px;font-size:0.72rem;font-weight:700;text-transform:uppercase;letter-spacing:0.07em;color:rgba(255,255,255,0.45);">No Planning Needed ✓</div>
 					<div style="background:#1e1e1e;padding:12px 16px;font-size:0.72rem;font-weight:700;text-transform:uppercase;letter-spacing:0.07em;color:rgba(255,255,255,0.45);">Planning Required ✗</div>
 					<?php for ( $i = 1; $i <= 5; $i++ ) : ?>
-					<div style="background:rgba(255,255,255,0.03);padding:10px 16px;font-size:0.83rem;color:var(--color-muted);border-top:1px solid rgba(255,255,255,0.06);"><?php echo esc_html( $a[ 'noPlan' . $i ] ); ?></div>
-					<div style="background:rgba(255,255,255,0.03);padding:10px 16px;font-size:0.83rem;color:var(--color-muted);border-top:1px solid rgba(255,255,255,0.06);"><?php echo esc_html( $a[ 'planReq' . $i ] ); ?></div>
+					<div style="background:rgba(255,255,255,0.03);padding:10px 16px;font-size:0.83rem;color:var(--color-muted);border-top:1px solid rgba(255,255,255,0.06);"><?php echo blocksy_child_kses_inline( $a[ 'noPlan' . $i ] ); ?></div>
+					<div style="background:rgba(255,255,255,0.03);padding:10px 16px;font-size:0.83rem;color:var(--color-muted);border-top:1px solid rgba(255,255,255,0.06);"><?php echo blocksy_child_kses_inline( $a[ 'planReq' . $i ] ); ?></div>
 					<?php endfor; ?>
 				</div>
-				<p style="color:rgba(255,255,255,0.35);font-size:0.78rem;margin-top:16px;"><?php echo esc_html( $a['footnote'] ); ?></p>
+				<p style="color:rgba(255,255,255,0.35);font-size:0.78rem;margin-top:16px;"><?php echo blocksy_child_kses_inline( $a['footnote'] ); ?></p>
 			</div>
 			<div>
 				<h3 style="margin-bottom:18px;font-size:1rem;">Building Regulations — What We Cover</h3>
 				<div style="display:flex;flex-direction:column;gap:10px;">
 					<?php foreach ( [ 'reg1', 'reg2', 'reg3', 'reg4' ] as $r ) : ?>
 					<div class="card" style="padding:16px 20px;border-radius:16px;display:flex;gap:14px;align-items:flex-start;">
-						<div style="flex-shrink:0;width:32px;height:32px;background:rgba(253,83,32,0.1);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.7rem;font-weight:800;color:var(--color-orange);"><?php echo esc_html( $a[ $r . 'Badge' ] ); ?></div>
+						<div style="flex-shrink:0;width:32px;height:32px;background:rgba(253,83,32,0.1);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.7rem;font-weight:800;color:var(--color-orange);"><?php echo blocksy_child_kses_inline( $a[ $r . 'Badge' ] ); ?></div>
 						<div>
-							<h4 style="font-size:0.875rem;margin-bottom:2px;"><?php echo esc_html( $a[ $r . 'Title' ] ); ?></h4>
-							<p style="font-size:0.8rem;color:#777;"><?php echo esc_html( $a[ $r . 'Desc' ] ); ?></p>
+							<h4 style="font-size:0.875rem;margin-bottom:2px;"><?php echo blocksy_child_kses_inline( $a[ $r . 'Title' ] ); ?></h4>
+							<p style="font-size:0.8rem;color:#777;"><?php echo blocksy_child_kses_inline( $a[ $r . 'Desc' ] ); ?></p>
 						</div>
 					</div>
 					<?php endforeach; ?>

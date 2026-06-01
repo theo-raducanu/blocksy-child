@@ -13,6 +13,25 @@
     var TextControl = wp.components.TextControl;
     var TextareaControl = wp.components.TextareaControl;
 
+    // Inline editable RichText rendered on the canvas. Restrictive by design:
+    // the editor can only change text, never the layout/structure. opts.plain
+    // (headings, labels, buttons) allows no formatting; otherwise links + bold/italic.
+    function rt(tagName, value, onChange, opts) {
+        opts = opts || {};
+        var props = {
+            tagName: tagName,
+            value: typeof value === 'string' ? value : '',
+            onChange: onChange,
+            allowedFormats: opts.plain ? [] : ['core/bold', 'core/italic', 'core/link']
+        };
+        if (opts.className) { props.className = opts.className; }
+        if (opts.style) { props.style = opts.style; }
+        if (opts.placeholder) { props.placeholder = opts.placeholder; }
+        if (opts.key) { props.key = opts.key; }
+        if (opts.href) { props.href = opts.href; }
+        return el(RichText, props);
+    }
+
     if (typeof getBlockType === 'function' && getBlockType('myloft/dormer-faq')) return;
 
     var defaultFaqs = [
@@ -75,8 +94,9 @@
             edit: function (props) {
                 var a = props.attributes;
                 var setAttributes = props.setAttributes;
-                var SSR = wp.serverSideRender && (wp.serverSideRender.default || wp.serverSideRender);
-                var blockProps = useBlockProps({ style: { margin: 0, padding: 0 } });
+                var blockProps = useBlockProps({ className: 'dormer-loft-blocks', style: { margin: 0, padding: 0 } });
+                function set(key) { return function (v) { var u = {}; u[key] = v; setAttributes(u); }; }
+                var ctaImg = a.ctaImageUrl || 'https://masterpiececonstruction.co.uk/wp-content/uploads/2023/04/project1-8-scaled-1.jpg';
 
                 function getLegacyFaqs() {
                     var rows = [];
@@ -118,9 +138,6 @@
                     setAttributes({ faqs: next });
                 }
 
-                if (!SSR) {
-                    return el('div', blockProps, el('p', { style: { padding: '1em', color: '#666' } }, 'Dormer FAQ — preview requires ServerSideRender'));
-                }
                 return el('div', blockProps,
                     el(InspectorControls, {},
                         el(PanelBody, { title: 'Section Content', initialOpen: false },
@@ -156,7 +173,38 @@
                             el(TextControl, { label: 'CTA Button 2 URL', value: a.ctaBtn2Url, onChange: function (v) { setAttributes({ ctaBtn2Url: v }); } })
                         )
                     ),
-                    el(SSR, { block: 'myloft/dormer-faq', attributes: a })
+                    el('section', { className: 'section section--dark', id: 'faq' },
+                        el('div', { className: 'wrap' },
+                            el('div', { className: 'grid-2', style: { gap: '64px', alignItems: 'flex-start' } },
+                                el('div', null,
+                                    rt('span', a.eyebrow, set('eyebrow'), { plain: true, className: 'eyebrow', placeholder: 'Eyebrow' }),
+                                    rt('h2', a.h2, set('h2'), { plain: true, style: { color: '#fff', marginBottom: '36px' }, placeholder: 'Heading' }),
+                                    faqs.map(function (row, index) {
+                                        return el('div', { key: 'faq-item-' + index, className: 'faq-item open' },
+                                            el('h3', { className: 'faq-q' },
+                                                rt('span', row.question, function (v) { updateFaq(index, 'question', v); }, { plain: true, placeholder: 'Question ' + (index + 1) }),
+                                                el('span', { className: 'faq-toggle' })
+                                            ),
+                                            rt('div', row.answer, function (v) { updateFaq(index, 'answer', v); }, { className: 'faq-a', placeholder: 'Answer ' + (index + 1) })
+                                        );
+                                    })
+                                ),
+                                el('div', { style: { position: 'sticky', top: '90px' } },
+                                    el('div', { style: { position: 'relative', borderRadius: 'var(--radius-img)', overflow: 'hidden', minHeight: '480px', display: 'flex', flexDirection: 'column', justifyContent: 'flex-end' } },
+                                        el('div', { className: 'img-ph', style: { position: 'absolute', inset: 0, borderRadius: 0, backgroundImage: "url('" + ctaImg + "')", backgroundSize: 'cover', backgroundPosition: 'center' } }),
+                                        el('div', { style: { position: 'relative', zIndex: 2, margin: '20px', padding: '28px', background: 'rgba(0,0,0,0.55)', borderRadius: '16px', backdropFilter: 'blur(12px)' } },
+                                            rt('h3', a.ctaTitle, set('ctaTitle'), { plain: true, style: { color: '#fff', marginBottom: '10px', fontSize: '1.1rem' }, placeholder: 'CTA title' }),
+                                            rt('p', a.ctaBody, set('ctaBody'), { style: { color: 'rgba(255,255,255,0.75)', fontSize: '0.875rem', marginBottom: '22px' }, placeholder: 'CTA body' }),
+                                            rt('a', a.ctaBtn1Text, set('ctaBtn1Text'), { plain: true, href: a.ctaBtn1Url || '#', className: 'btn-cta btn-cta--solid', style: { width: '100%', justifyContent: 'center', marginBottom: '12px' }, placeholder: 'Button 1' }),
+                                            el('div', { style: { textAlign: 'center' } },
+                                                rt('a', a.ctaBtn2Text, set('ctaBtn2Text'), { plain: true, href: a.ctaBtn2Url || '#', className: 'btn btn--white', style: { fontSize: '0.85rem', justifyContent: 'center' }, placeholder: 'Button 2' })
+                                            )
+                                        )
+                                    )
+                                )
+                            )
+                        )
+                    )
                 );
             },
             save: function () { return null; },

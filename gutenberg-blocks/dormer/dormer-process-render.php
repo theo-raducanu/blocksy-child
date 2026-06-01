@@ -41,10 +41,10 @@ for ( $i = 1; $i <= 4; $i++ ) {
 <section class="section section--dark" id="process">
 	<div class="wrap">
 		<div style="text-align:center;margin-bottom:56px;">
-			<span class="eyebrow"><?php echo esc_html( $a['eyebrow'] ); ?></span>
-			<h2 style="color:#fff;"><?php echo esc_html( $a['h2'] ); ?></h2>
+			<span class="eyebrow"><?php echo blocksy_child_kses_inline( $a['eyebrow'] ); ?></span>
+			<h2 style="color:#fff;"><?php echo blocksy_child_kses_inline( $a['h2'] ); ?></h2>
 			<?php if ( ! empty( $a['intro'] ) ) : ?>
-			<p class="section-intro" style="color:rgba(255,255,255,0.7);max-width:720px;margin:16px auto 0;font-size:1rem;line-height:1.6;"><?php echo esc_html( $a['intro'] ); ?></p>
+			<p class="section-intro" style="color:rgba(255,255,255,0.7);max-width:720px;margin:16px auto 0;font-size:1rem;line-height:1.6;"><?php echo blocksy_child_kses_inline( $a['intro'] ); ?></p>
 			<?php endif; ?>
 		</div>
 		<div class="grid-2" style="gap:64px;align-items:flex-start;">
@@ -52,16 +52,16 @@ for ( $i = 1; $i <= 4; $i++ ) {
 				<h3 style="color:#fff;margin-bottom:20px;font-size:1rem;letter-spacing:0.04em;text-transform:uppercase;opacity:0.5;">Build Timeline — 6–10 Weeks</h3>
 				<?php foreach ( $tl_rows as $row ) : ?>
 				<div class="timeline-row"<?php echo $row['last'] ? ' style="border-bottom:none;"' : ''; ?>>
-					<div class="timeline-weeks"><?php echo esc_html( $row['weeks'] ); ?></div>
+					<div class="timeline-weeks"><?php echo blocksy_child_kses_inline( $row['weeks'] ); ?></div>
 					<div>
-						<div style="font-size:0.95rem;font-weight:700;color:#fff;margin-bottom:3px;"><?php echo esc_html( $row['phase'] ); ?></div>
-						<div style="font-size:0.875rem;color:var(--color-muted);"><?php echo esc_html( $row['desc'] ); ?></div>
+						<div style="font-size:0.95rem;font-weight:700;color:#fff;margin-bottom:3px;"><?php echo blocksy_child_kses_inline( $row['phase'] ); ?></div>
+						<div style="font-size:0.875rem;color:var(--color-muted);"><?php echo blocksy_child_kses_inline( $row['desc'] ); ?></div>
 					</div>
 				</div>
 				<?php endforeach; ?>
 				<div style="margin-top:28px;background:#efece6;border:1px solid rgba(253,83,32,0.2);border-radius:16px;padding:20px 24px;">
-					<p style="color:#5a5a5a;font-size:0.875rem;font-weight:600;margin-bottom:6px;"><?php echo esc_html( $a['whyFasterTitle'] ); ?></p>
-					<p style="color:#5a5a5a;font-size:0.82rem;"><?php echo esc_html( $a['whyFasterBody'] ); ?></p>
+					<p style="color:#5a5a5a;font-size:0.875rem;font-weight:600;margin-bottom:6px;"><?php echo blocksy_child_kses_inline( $a['whyFasterTitle'] ); ?></p>
+					<p style="color:#5a5a5a;font-size:0.82rem;"><?php echo blocksy_child_kses_inline( $a['whyFasterBody'] ); ?></p>
 				</div>
 			</div>
 			<div>
@@ -71,8 +71,8 @@ for ( $i = 1; $i <= 4; $i++ ) {
 					<div style="display:flex;gap:16px;padding:14px 0;border-bottom:<?php echo $i < 8 ? '1px solid rgba(255,255,255,0.07)' : 'none'; ?>;align-items:flex-start;">
 						<div class="step-num" style="width:32px;height:32px;font-size:0.75rem;"><?php echo sprintf( '%02d', $i ); ?></div>
 						<div>
-							<div style="color:#fff;font-weight:600;font-size:0.9rem;"><?php echo esc_html( $a[ 'step' . $i . 'Title' ] ); ?></div>
-							<div style="color:var(--color-muted);font-size:0.82rem;"><?php echo esc_html( $a[ 'step' . $i . 'Desc' ] ); ?></div>
+							<div style="color:#fff;font-weight:600;font-size:0.9rem;"><?php echo blocksy_child_kses_inline( $a[ 'step' . $i . 'Title' ] ); ?></div>
+							<div style="color:var(--color-muted);font-size:0.82rem;"><?php echo blocksy_child_kses_inline( $a[ 'step' . $i . 'Desc' ] ); ?></div>
 						</div>
 					</div>
 					<?php endfor; ?>
@@ -80,8 +80,8 @@ for ( $i = 1; $i <= 4; $i++ ) {
 			</div>
 		</div>
 		<div style="margin-top:44px;text-align:center;display:flex;justify-content:center;gap:20px;flex-wrap:wrap;">
-			<a href="<?php echo esc_url( $a['cta1Url'] ); ?>" class="btn-cta btn-cta--solid"><?php echo esc_html( $a['cta1Text'] ); ?></a>
-			<a href="<?php echo esc_url( $a['cta2Url'] ); ?>" class="btn btn--white"><?php echo esc_html( $a['cta2Text'] ); ?></a>
+			<a href="<?php echo esc_url( $a['cta1Url'] ); ?>" class="btn-cta btn-cta--solid"><?php echo blocksy_child_kses_inline( $a['cta1Text'] ); ?></a>
+			<a href="<?php echo esc_url( $a['cta2Url'] ); ?>" class="btn btn--white"><?php echo blocksy_child_kses_inline( $a['cta2Text'] ); ?></a>
 		</div>
 	</div>
 </section>

@@ -83,6 +83,61 @@
         return escapeHtml(value);
     }
 
+    // Content fields are edited with RichText (see renderFieldControl), so their
+    // value is already sanitized inline HTML. Output it as-is rather than
+    // escaping it, so editor links and line breaks render instead of showing
+    // raw markup (e.g. a literal <br>) on the page.
+    function richValue(value) {
+        return String(typeof value === 'undefined' || value === null ? '' : value);
+    }
+
+    // Helpers passed to each section's inline editRender, so they can update the
+    // stored `data` (which keeps the frontend `html` in sync via setData).
+    function makeEditHelpers(data, setData) {
+        return {
+            setField: function (key, value) {
+                var next = Object.assign({}, data);
+                next[key] = value;
+                setData(next);
+            },
+            setItem: function (key, index, value) {
+                var list = Array.isArray(data[key]) ? data[key].slice() : [];
+                list[index] = value;
+                var next = Object.assign({}, data);
+                next[key] = list;
+                setData(next);
+            },
+            setItemField: function (key, index, field, value) {
+                var list = Array.isArray(data[key]) ? data[key].slice() : [];
+                var item = Object.assign({}, (list[index] && typeof list[index] === 'object') ? list[index] : {});
+                item[field] = value;
+                list[index] = item;
+                var next = Object.assign({}, data);
+                next[key] = list;
+                setData(next);
+            }
+        };
+    }
+
+    // Inline editable RichText on the canvas. Restrictive by design: the editor
+    // can only change text, never the layout/structure. opts.plain (headings,
+    // labels) allows no formatting; otherwise links + bold/italic.
+    function rt(tagName, value, onChange, opts) {
+        opts = opts || {};
+        var props = {
+            tagName: tagName,
+            value: typeof value === 'string' ? value : '',
+            onChange: onChange,
+            allowedFormats: opts.plain ? [] : ['core/bold', 'core/italic', 'core/link']
+        };
+        if (opts.className) props.className = opts.className;
+        if (opts.style) props.style = opts.style;
+        if (opts.placeholder) props.placeholder = opts.placeholder;
+        if (opts.key) props.key = opts.key;
+        if (opts.href) props.href = opts.href;
+        return el(RichText, props);
+    }
+
     function chunkArray(items, size) {
         var chunks = [];
         var safeItems = Array.isArray(items) ? items : [];
@@ -103,7 +158,7 @@
         return cloneValue(repeater.defaultItem);
     }
 
-    function renderFieldControl(field, value, onChange, key) {
+    function renderFieldControl(field, value, onChange, key, options) {
         var type = field.type;
         var fieldKey = field.key || '';
 
@@ -116,6 +171,10 @@
                 type = 'text';
             }
         }
+
+        // Every field stays available in the sidebar (so repeaters can be
+        // managed and nothing is ever uneditable) in addition to being editable
+        // inline on the canvas.
 
         if (type === 'textarea' || type === 'richtext') {
             return el(
@@ -289,7 +348,7 @@
         );
     }
 
-    function renderRepeaterPanel(repeater, data, setData) {
+    function renderRepeaterPanel(repeater, data, setData, options) {
         var items = Array.isArray(data[repeater.key]) ? data[repeater.key] : [];
 
         function commit(nextItems) {
@@ -381,7 +440,8 @@
                                 next[index] = nextItem;
                                 commit(next);
                             },
-                            itemKey + '-' + field.key
+                            itemKey + '-' + field.key,
+                            options
                         )
                     );
                 });
@@ -397,7 +457,8 @@
                             next[index] = value;
                             commit(next);
                         },
-                        itemKey + '-value'
+                        itemKey + '-value',
+                        options
                     )
                 );
             }
@@ -450,7 +511,7 @@
             {
                 key: 'panel-' + repeater.key,
                 title: repeater.label,
-                initialOpen: false
+                initialOpen: true
             },
             content
         );
@@ -458,7 +519,7 @@
 
     function buildHeroSection(data) {
         var pills = (Array.isArray(data.pills) ? data.pills : []).map(function (pill) {
-            return '<span class="pill">' + escapeHtml(pill) + '</span>';
+            return '<span class="pill">' + richValue(pill) + '</span>';
         }).join('');
 
         return [
@@ -466,11 +527,11 @@
             '    <div class="img-cover" style="position:absolute;inset:0;border-radius:0;background-image:url(\'' + escapeAttr(data.heroImageUrl) + '\');"></div>',
             '    <div style="position:absolute;inset:0;background:linear-gradient(110deg,rgba(4,4,4,.88) 0%,rgba(4,4,4,.58) 65%,rgba(4,4,4,.35) 100%);"></div>',
             '    <div class="wrap" style="position:relative;z-index:2;">',
-            '        <h1 style="color:#fff;max-width:760px;margin-bottom:18px;">' + escapeHtml(data.title) + '</h1>',
-            '        <p style="color:rgba(255,255,255,.83);max-width:760px;font-size:1.08rem;margin-bottom:30px;">' + escapeHtml(data.subtitle) + '</p>',
+            '        <h1 style="color:#fff;max-width:760px;margin-bottom:18px;">' + richValue(data.title) + '</h1>',
+            '        <p style="color:rgba(255,255,255,.83);max-width:760px;font-size:1.08rem;margin-bottom:30px;">' + richValue(data.subtitle) + '</p>',
             '        <div style="display:flex;gap:16px;flex-wrap:wrap;align-items:center;margin-bottom:24px;">',
-            '            <a href="' + escapeAttr(data.primaryCtaUrl || '#calculator') + '" class="btn-cta btn-cta--solid">' + escapeHtml(data.primaryCtaText) + '</a>',
-            '            <a href="' + escapeAttr(data.secondaryCtaUrl || '#collections') + '" class="btn btn--white">' + escapeHtml(data.secondaryCtaText) + '</a>',
+            '            <a href="' + escapeAttr(data.primaryCtaUrl || '#calculator') + '" class="btn-cta btn-cta--solid">' + richValue(data.primaryCtaText) + '</a>',
+            '            <a href="' + escapeAttr(data.secondaryCtaUrl || '#collections') + '" class="btn btn--white">' + richValue(data.secondaryCtaText) + '</a>',
             '        </div>',
             '        <div class="pill-row">' + pills + '</div>',
             '    </div>',
@@ -478,9 +539,52 @@
         ].join('');
     }
 
+    function heroEditRender(data, h) {
+        var pills = Array.isArray(data.pills) ? data.pills : [];
+        return el('section', { className: 'section section--dark', style: { padding: '220px 0 90px', position: 'relative', overflow: 'hidden' } },
+            el('div', { className: 'img-cover', style: { position: 'absolute', inset: 0, borderRadius: 0, backgroundImage: "url('" + (data.heroImageUrl || '') + "')" } }),
+            el('div', { style: { position: 'absolute', inset: 0, background: 'linear-gradient(110deg,rgba(4,4,4,.88) 0%,rgba(4,4,4,.58) 65%,rgba(4,4,4,.35) 100%)' } }),
+            el('div', { className: 'wrap', style: { position: 'relative', zIndex: 2 } },
+                rt('h1', data.title, function (v) { h.setField('title', v); }, {
+                    plain: true,
+                    style: { color: '#fff', maxWidth: '760px', marginBottom: '18px' },
+                    placeholder: 'Title…'
+                }),
+                rt('p', data.subtitle, function (v) { h.setField('subtitle', v); }, {
+                    style: { color: 'rgba(255,255,255,.83)', maxWidth: '760px', fontSize: '1.08rem', marginBottom: '30px' },
+                    placeholder: 'Subtitle…'
+                }),
+                el('div', { style: { display: 'flex', gap: '16px', flexWrap: 'wrap', alignItems: 'center', marginBottom: '24px' } },
+                    rt('a', data.primaryCtaText, function (v) { h.setField('primaryCtaText', v); }, {
+                        plain: true,
+                        href: (data.primaryCtaUrl || '#calculator'),
+                        className: 'btn-cta btn-cta--solid',
+                        placeholder: 'Primary CTA…'
+                    }),
+                    rt('a', data.secondaryCtaText, function (v) { h.setField('secondaryCtaText', v); }, {
+                        plain: true,
+                        href: (data.secondaryCtaUrl || '#collections'),
+                        className: 'btn btn--white',
+                        placeholder: 'Secondary CTA…'
+                    })
+                ),
+                el('div', { className: 'pill-row' },
+                    pills.map(function (pill, index) {
+                        return rt('span', pill, function (v) { h.setItem('pills', index, v); }, {
+                            plain: true,
+                            key: 'pill-' + index,
+                            className: 'pill',
+                            placeholder: 'Pill…'
+                        });
+                    })
+                )
+            )
+        );
+    }
+
     function buildTrustBarSection(data) {
         var metrics = (Array.isArray(data.metrics) ? data.metrics : []).map(function (metric) {
-            return '<div class="hero-metric">' + escapeHtml(metric) + '</div>';
+            return '<div class="hero-metric">' + richValue(metric) + '</div>';
         }).join('');
 
         return [
@@ -492,11 +596,29 @@
         ].join('');
     }
 
+    function trustBarEditRender(data, h) {
+        var metrics = Array.isArray(data.metrics) ? data.metrics : [];
+        return el('section', { className: 'section--dark', style: { padding: '34px 0', borderTop: '1px solid rgba(255,255,255,.09)', borderBottom: '1px solid rgba(255,255,255,.09)' } },
+            el('div', { className: 'wrap' },
+                el('div', { className: 'hero-metrics' },
+                    metrics.map(function (metric, index) {
+                        return rt('div', metric, function (v) { h.setItem('metrics', index, v); }, {
+                            plain: true,
+                            key: 'metric-' + index,
+                            className: 'hero-metric',
+                            placeholder: 'Metric…'
+                        });
+                    })
+                )
+            )
+        );
+    }
+
     function buildIntroSection(data) {
         var paragraphs = (Array.isArray(data.paragraphs) ? data.paragraphs : []).map(function (paragraph, index, list) {
             var color = index === 0 ? '#3f3f3f' : '#555';
             var margin = index === list.length - 1 ? '' : 'margin-bottom:14px;';
-            return '<p style="color:' + color + ';' + margin + '">' + escapeHtml(paragraph) + '</p>';
+            return '<p style="color:' + color + ';' + margin + '">' + richValue(paragraph) + '</p>';
         }).join('');
 
         return [
@@ -504,8 +626,8 @@
             '    <div class="wrap">',
             '        <div class="grid-2" style="align-items:center;gap:52px;">',
             '            <div>',
-            '                <span class="eyebrow">' + escapeHtml(data.eyebrow) + '</span>',
-            '                <h2 style="margin-bottom:16px;">' + escapeHtml(data.title) + '</h2>',
+            '                <span class="eyebrow">' + richValue(data.eyebrow) + '</span>',
+            '                <h2 style="margin-bottom:16px;">' + richValue(data.title) + '</h2>',
             '                ' + paragraphs,
             '            </div>',
             '            <div class="img-cover" style="min-height:420px;background-image:url(\'' + escapeAttr(data.imageUrl) + '\');"></div>',
@@ -515,15 +637,45 @@
         ].join('');
     }
 
+    function introEditRender(data, h) {
+        var paragraphs = Array.isArray(data.paragraphs) ? data.paragraphs : [];
+        return el('section', { className: 'section section--light', id: 'intro-surrey' },
+            el('div', { className: 'wrap' },
+                el('div', { className: 'grid-2', style: { alignItems: 'center', gap: '52px' } },
+                    el('div', null,
+                        rt('span', data.eyebrow, function (v) { h.setField('eyebrow', v); }, {
+                            plain: true,
+                            className: 'eyebrow',
+                            placeholder: 'Eyebrow…'
+                        }),
+                        rt('h2', data.title, function (v) { h.setField('title', v); }, {
+                            plain: true,
+                            style: { marginBottom: '16px' },
+                            placeholder: 'Title…'
+                        }),
+                        paragraphs.map(function (paragraph, index) {
+                            return rt('p', paragraph, function (v) { h.setItem('paragraphs', index, v); }, {
+                                key: 'para-' + index,
+                                style: { color: index === 0 ? '#3f3f3f' : '#555', marginBottom: index === paragraphs.length - 1 ? null : '14px' },
+                                placeholder: 'Paragraph text…'
+                            });
+                        })
+                    ),
+                    el('div', { className: 'img-cover', style: { minHeight: '420px', backgroundImage: "url('" + (data.imageUrl || '') + "')" } })
+                )
+            )
+        );
+    }
+
     function buildPropertyProfileSection(data) {
         var cards = (Array.isArray(data.cards) ? data.cards : []).map(function (card) {
             var tone = card.tone === 'excellent' || card.tone === 'unlikely' ? card.tone : 'good';
             return [
                 '<article class="property-card">',
-                '    <span class="property-status property-status--' + tone + '">' + escapeHtml(card.status) + '</span>',
-                '    <h3>' + escapeHtml(card.title) + '</h3>',
-                '    <p class="property-conversion">' + escapeHtml(card.conversion) + '</p>',
-                '    <p class="property-notes">' + escapeHtml(card.notes) + '</p>',
+                '    <span class="property-status property-status--' + tone + '">' + richValue(card.status) + '</span>',
+                '    <h3>' + richValue(card.title) + '</h3>',
+                '    <p class="property-conversion">' + richValue(card.conversion) + '</p>',
+                '    <p class="property-notes">' + richValue(card.notes) + '</p>',
                 '</article>'
             ].join('');
         }).join('');
@@ -532,15 +684,70 @@
             '<section class="section section--dark" id="property-profile">',
             '    <div class="wrap">',
             '        <div style="text-align:center;margin-bottom:36px;">',
-            '            <span class="eyebrow">' + escapeHtml(data.eyebrow) + '</span>',
-            '            <h2 style="color:#fff;">' + escapeHtml(data.title) + '</h2>',
+            '            <span class="eyebrow">' + richValue(data.eyebrow) + '</span>',
+            '            <h2 style="color:#fff;">' + richValue(data.title) + '</h2>',
             '        </div>',
             '        <div class="property-cards">' + cards + '</div>',
-            '        <p style="color:var(--color-muted);max-width:980px;margin:0 auto 12px;">' + escapeHtml(data.summary) + '</p>',
-            '        <p class="property-confirm">' + escapeHtml(data.confirm) + '</p>',
+            '        <p style="color:var(--color-muted);max-width:980px;margin:0 auto 12px;">' + richValue(data.summary) + '</p>',
+            '        <p class="property-confirm">' + richValue(data.confirm) + '</p>',
             '    </div>',
             '</section>'
         ].join('');
+    }
+
+    function propertyProfileEditRender(data, h) {
+        var cards = Array.isArray(data.cards) ? data.cards : [];
+        return el('section', { className: 'section section--dark', id: 'property-profile' },
+            el('div', { className: 'wrap' },
+                el('div', { style: { textAlign: 'center', marginBottom: '36px' } },
+                    rt('span', data.eyebrow, function (v) { h.setField('eyebrow', v); }, {
+                        plain: true,
+                        className: 'eyebrow',
+                        placeholder: 'Eyebrow…'
+                    }),
+                    rt('h2', data.title, function (v) { h.setField('title', v); }, {
+                        plain: true,
+                        style: { color: '#fff' },
+                        placeholder: 'Title…'
+                    })
+                ),
+                el('div', { className: 'property-cards' },
+                    cards.map(function (card, index) {
+                        var tone = card.tone === 'excellent' || card.tone === 'unlikely' ? card.tone : 'good';
+                        return el('article', { key: 'card-' + index, className: 'property-card' },
+                            rt('span', card.status, function (v) { h.setItemField('cards', index, 'status', v); }, {
+                                plain: true,
+                                key: 'x' + index,
+                                className: 'property-status property-status--' + tone,
+                                placeholder: 'Status…'
+                            }),
+                            rt('h3', card.title, function (v) { h.setItemField('cards', index, 'title', v); }, {
+                                plain: true,
+                                placeholder: 'Property type…'
+                            }),
+                            rt('p', card.conversion, function (v) { h.setItemField('cards', index, 'conversion', v); }, {
+                                plain: true,
+                                className: 'property-conversion',
+                                placeholder: 'Conversion…'
+                            }),
+                            rt('p', card.notes, function (v) { h.setItemField('cards', index, 'notes', v); }, {
+                                className: 'property-notes',
+                                placeholder: 'Notes…'
+                            })
+                        );
+                    })
+                ),
+                rt('p', data.summary, function (v) { h.setField('summary', v); }, {
+                    style: { color: 'var(--color-muted)', maxWidth: '980px', margin: '0 auto 12px' },
+                    placeholder: 'Summary…'
+                }),
+                rt('p', data.confirm, function (v) { h.setField('confirm', v); }, {
+                    plain: true,
+                    className: 'property-confirm',
+                    placeholder: 'Confirmation…'
+                })
+            )
+        );
     }
 
     function buildPlanningSection(data) {
@@ -549,45 +756,137 @@
 
             return [
                 '<details class="planning-accordion-item"' + openAttr + '>',
-                '    <summary class="planning-accordion-summary"><h3 class="planning-accordion-title">' + escapeHtml(row.name) + '</h3></summary>',
+                '    <summary class="planning-accordion-summary"><h3 class="planning-accordion-title">' + richValue(row.name) + '</h3></summary>',
                 '    <div class="planning-accordion-content">',
-                '        <p class="planning-accordion-meta">' + escapeHtml(row.towns) + '</p>',
-                '        <p class="planning-accordion-body">' + escapeHtml(row.notes) + '</p>',
+                '        <p class="planning-accordion-meta">' + richValue(row.towns) + '</p>',
+                '        <p class="planning-accordion-body">' + richValue(row.notes) + '</p>',
                 '    </div>',
                 '</details>'
             ].join('');
         }).join('');
 
         var pdItems = (Array.isArray(data.pdItems) ? data.pdItems : []).map(function (item) {
-            return '<li><span class="chk">+</span>' + escapeHtml(item) + '</li>';
+            return '<li><span class="chk">+</span>' + richValue(item) + '</li>';
         }).join('');
 
         var ppItems = (Array.isArray(data.ppItems) ? data.ppItems : []).map(function (item) {
-            return '<li><span class="chk">-</span>' + escapeHtml(item) + '</li>';
+            return '<li><span class="chk">-</span>' + richValue(item) + '</li>';
         }).join('');
 
         return [
             '<section class="section section--light" id="planning-surrey">',
             '    <div class="wrap">',
-            '        <span class="eyebrow">' + escapeHtml(data.eyebrow) + '</span>',
-            '        <h2 style="margin-bottom:14px;">' + escapeHtml(data.title) + '</h2>',
-            '        <p style="color:#444;margin-bottom:14px;">' + escapeHtml(data.intro1) + '</p>',
-            '        <p style="color:#444;margin-bottom:24px;">' + escapeHtml(data.intro2) + '</p>',
-            '        <h3 style="margin-bottom:12px;">' + escapeHtml(data.tableTitle) + '</h3>',
+            '        <span class="eyebrow">' + richValue(data.eyebrow) + '</span>',
+            '        <h2 style="margin-bottom:14px;">' + richValue(data.title) + '</h2>',
+            '        <p style="color:#444;margin-bottom:14px;">' + richValue(data.intro1) + '</p>',
+            '        <p style="color:#444;margin-bottom:24px;">' + richValue(data.intro2) + '</p>',
+            '        <h3 style="margin-bottom:12px;">' + richValue(data.tableTitle) + '</h3>',
             '        <div class="planning-accordion" style="margin-bottom:24px;">' + authorities + '</div>',
             '        <div class="grid-2" style="gap:20px;">',
             '            <div class="card" style="border:1px solid #ddd8ce;">',
-            '                <h3 style="margin-bottom:10px;">' + escapeHtml(data.pdTitle) + '</h3>',
+            '                <h3 style="margin-bottom:10px;">' + richValue(data.pdTitle) + '</h3>',
             '                <ul class="checklist" style="color:#444;">' + pdItems + '</ul>',
             '            </div>',
             '            <div class="card" style="border:1px solid #ddd8ce;">',
-            '                <h3 style="margin-bottom:10px;">' + escapeHtml(data.ppTitle) + '</h3>',
+            '                <h3 style="margin-bottom:10px;">' + richValue(data.ppTitle) + '</h3>',
             '                <ul class="checklist" style="color:#444;">' + ppItems + '</ul>',
             '            </div>',
             '        </div>',
             '    </div>',
             '</section>'
         ].join('');
+    }
+
+    function planningEditRender(data, h) {
+        var authorities = Array.isArray(data.authorities) ? data.authorities : [];
+        var pdItems = Array.isArray(data.pdItems) ? data.pdItems : [];
+        var ppItems = Array.isArray(data.ppItems) ? data.ppItems : [];
+        return el('section', { className: 'section section--light', id: 'planning-surrey' },
+            el('div', { className: 'wrap' },
+                rt('span', data.eyebrow, function (v) { h.setField('eyebrow', v); }, {
+                    plain: true,
+                    className: 'eyebrow',
+                    placeholder: 'Eyebrow…'
+                }),
+                rt('h2', data.title, function (v) { h.setField('title', v); }, {
+                    plain: true,
+                    style: { marginBottom: '14px' },
+                    placeholder: 'Title…'
+                }),
+                rt('p', data.intro1, function (v) { h.setField('intro1', v); }, {
+                    style: { color: '#444', marginBottom: '14px' },
+                    placeholder: 'Intro paragraph 1…'
+                }),
+                rt('p', data.intro2, function (v) { h.setField('intro2', v); }, {
+                    style: { color: '#444', marginBottom: '24px' },
+                    placeholder: 'Intro paragraph 2…'
+                }),
+                rt('h3', data.tableTitle, function (v) { h.setField('tableTitle', v); }, {
+                    plain: true,
+                    style: { marginBottom: '12px' },
+                    placeholder: 'Table title…'
+                }),
+                el('div', { className: 'planning-accordion', style: { marginBottom: '24px' } },
+                    authorities.map(function (row, index) {
+                        return el('details', { key: 'authority-' + index, className: 'planning-accordion-item', open: index === 0 },
+                            el('summary', { className: 'planning-accordion-summary' },
+                                rt('h3', row.name, function (v) { h.setItemField('authorities', index, 'name', v); }, {
+                                    plain: true,
+                                    className: 'planning-accordion-title',
+                                    placeholder: 'Authority name…'
+                                })
+                            ),
+                            el('div', { className: 'planning-accordion-content' },
+                                rt('p', row.towns, function (v) { h.setItemField('authorities', index, 'towns', v); }, {
+                                    className: 'planning-accordion-meta',
+                                    placeholder: 'Key towns…'
+                                }),
+                                rt('p', row.notes, function (v) { h.setItemField('authorities', index, 'notes', v); }, {
+                                    className: 'planning-accordion-body',
+                                    placeholder: 'Considerations…'
+                                })
+                            )
+                        );
+                    })
+                ),
+                el('div', { className: 'grid-2', style: { gap: '20px' } },
+                    el('div', { className: 'card', style: { border: '1px solid #ddd8ce' } },
+                        rt('h3', data.pdTitle, function (v) { h.setField('pdTitle', v); }, {
+                            plain: true,
+                            style: { marginBottom: '10px' },
+                            placeholder: 'Left card title…'
+                        }),
+                        el('ul', { className: 'checklist', style: { color: '#444' } },
+                            pdItems.map(function (item, index) {
+                                return el('li', { key: 'pd-' + index },
+                                    el('span', { className: 'chk' }, '+'),
+                                    rt('span', item, function (v) { h.setItem('pdItems', index, v); }, {
+                                        placeholder: 'Checklist item…'
+                                    })
+                                );
+                            })
+                        )
+                    ),
+                    el('div', { className: 'card', style: { border: '1px solid #ddd8ce' } },
+                        rt('h3', data.ppTitle, function (v) { h.setField('ppTitle', v); }, {
+                            plain: true,
+                            style: { marginBottom: '10px' },
+                            placeholder: 'Right card title…'
+                        }),
+                        el('ul', { className: 'checklist', style: { color: '#444' } },
+                            ppItems.map(function (item, index) {
+                                return el('li', { key: 'pp-' + index },
+                                    el('span', { className: 'chk' }, '-'),
+                                    rt('span', item, function (v) { h.setItem('ppItems', index, v); }, {
+                                        placeholder: 'Checklist item…'
+                                    })
+                                );
+                            })
+                        )
+                    )
+                )
+            )
+        );
     }
 
     function buildCollectionsSection(data) {
@@ -598,9 +897,9 @@
                     '<div class="card" style="padding:0;overflow:hidden;">',
                     '    <div class="img-cover" style="min-height:220px;border-radius:0;background-image:url(\'' + escapeAttr(card.imageUrl) + '\');"></div>',
                     '    <div style="padding:22px;">',
-                    '        <div class="badge" style="margin-bottom:8px;">' + escapeHtml(card.label) + '</div>',
-                    '        <h3 style="margin-bottom:6px;">' + escapeHtml(card.title) + '</h3>',
-                    '        <p style="color:#555;font-size:.9rem;">' + escapeHtml(card.desc) + '</p>',
+                    '        <div class="badge" style="margin-bottom:8px;">' + richValue(card.label) + '</div>',
+                    '        <h3 style="margin-bottom:6px;">' + richValue(card.title) + '</h3>',
+                    '        <p style="color:#555;font-size:.9rem;">' + richValue(card.desc) + '</p>',
                     '    </div>',
                     '</div>'
                 ].join('');
@@ -614,14 +913,72 @@
             '<section class="section section--dark" id="collections">',
             '    <div class="wrap">',
             '        <div style="text-align:center;margin-bottom:38px;">',
-            '            <span class="eyebrow">' + escapeHtml(data.eyebrow) + '</span>',
-            '            <h2 style="color:#fff;">' + escapeHtml(data.title) + '</h2>',
+            '            <span class="eyebrow">' + richValue(data.eyebrow) + '</span>',
+            '            <h2 style="color:#fff;">' + richValue(data.title) + '</h2>',
             '        </div>',
             '        ' + rows,
-            '        <div style="text-align:center;"><a href="' + escapeAttr(data.viewAllUrl || '#') + '" class="btn btn--white">' + escapeHtml(data.viewAllText) + '</a></div>',
+            '        <div style="text-align:center;"><a href="' + escapeAttr(data.viewAllUrl || '#') + '" class="btn btn--white">' + richValue(data.viewAllText) + '</a></div>',
             '    </div>',
             '</section>'
         ].join('');
+    }
+
+    function collectionsEditRender(data, h) {
+        var cards = Array.isArray(data.cards) ? data.cards : [];
+        var rows = chunkArray(cards, 2);
+        return el('section', { className: 'section section--dark', id: 'collections' },
+            el('div', { className: 'wrap' },
+                el('div', { style: { textAlign: 'center', marginBottom: '38px' } },
+                    rt('span', data.eyebrow, function (v) { h.setField('eyebrow', v); }, {
+                        plain: true,
+                        className: 'eyebrow',
+                        placeholder: 'Eyebrow…'
+                    }),
+                    rt('h2', data.title, function (v) { h.setField('title', v); }, {
+                        plain: true,
+                        style: { color: '#fff' },
+                        placeholder: 'Title…'
+                    })
+                ),
+                rows.map(function (row, rowIndex) {
+                    var margin = rowIndex === rows.length - 1 ? '22px' : '18px';
+                    return el('div', { key: 'row-' + rowIndex, className: 'grid-2', style: { marginBottom: margin } },
+                        row.map(function (card, colIndex) {
+                            var cardIndex = rowIndex * 2 + colIndex;
+                            return el('div', { key: 'card-' + cardIndex, className: 'card', style: { padding: 0, overflow: 'hidden' } },
+                                el('div', { className: 'img-cover', style: { minHeight: '220px', borderRadius: 0, backgroundImage: "url('" + (card.imageUrl || '') + "')" } }),
+                                el('div', { style: { padding: '22px' } },
+                                    rt('div', card.label, function (v) { h.setItemField('cards', cardIndex, 'label', v); }, {
+                                        plain: true,
+                                        key: 'x' + cardIndex,
+                                        className: 'badge',
+                                        style: { marginBottom: '8px' },
+                                        placeholder: 'Badge label…'
+                                    }),
+                                    rt('h3', card.title, function (v) { h.setItemField('cards', cardIndex, 'title', v); }, {
+                                        plain: true,
+                                        style: { marginBottom: '6px' },
+                                        placeholder: 'Title…'
+                                    }),
+                                    rt('p', card.desc, function (v) { h.setItemField('cards', cardIndex, 'desc', v); }, {
+                                        style: { color: '#555', fontSize: '.9rem' },
+                                        placeholder: 'Description…'
+                                    })
+                                )
+                            );
+                        })
+                    );
+                }),
+                el('div', { style: { textAlign: 'center' } },
+                    rt('a', data.viewAllText, function (v) { h.setField('viewAllText', v); }, {
+                        plain: true,
+                        href: (data.viewAllUrl || '#'),
+                        className: 'btn btn--white',
+                        placeholder: 'View all link…'
+                    })
+                )
+            )
+        );
     }
 
     function buildPricingSection(data) {
@@ -629,10 +986,10 @@
             var className = card.featured ? 'pricing-card pricing-card--featured' : 'pricing-card';
             return [
                 '<article class="' + className + '">',
-                '    <span class="pricing-badge">' + escapeHtml(card.badge) + '</span>',
-                '    <h3>' + escapeHtml(card.title) + '</h3>',
-                '    <p class="pricing-range">' + escapeHtml(card.range) + '</p>',
-                '    <p class="pricing-best">' + escapeHtml(card.best) + '</p>',
+                '    <span class="pricing-badge">' + richValue(card.badge) + '</span>',
+                '    <h3>' + richValue(card.title) + '</h3>',
+                '    <p class="pricing-range">' + richValue(card.range) + '</p>',
+                '    <p class="pricing-best">' + richValue(card.best) + '</p>',
                 '</article>'
             ].join('');
         }).join('');
@@ -640,27 +997,104 @@
         return [
             '<section class="section section--light" id="pricing">',
             '    <div class="wrap">',
-            '        <span class="eyebrow">' + escapeHtml(data.eyebrow) + '</span>',
-            '        <h2 style="margin-bottom:14px;">' + escapeHtml(data.title) + '</h2>',
-            '        <p style="color:#444;margin-bottom:20px;">' + escapeHtml(data.intro) + '</p>',
+            '        <span class="eyebrow">' + richValue(data.eyebrow) + '</span>',
+            '        <h2 style="margin-bottom:14px;">' + richValue(data.title) + '</h2>',
+            '        <p style="color:#444;margin-bottom:20px;">' + richValue(data.intro) + '</p>',
             '        <div class="pricing-cards">' + cards + '</div>',
-            '        <a href="' + escapeAttr(data.ctaUrl || '#calculator') + '" class="btn-cta btn-cta--solid">' + escapeHtml(data.ctaText) + '</a>',
+            '        <a href="' + escapeAttr(data.ctaUrl || '#calculator') + '" class="btn-cta btn-cta--solid">' + richValue(data.ctaText) + '</a>',
             '    </div>',
             '</section>'
         ].join('');
+    }
+
+    function pricingEditRender(data, h) {
+        var cards = Array.isArray(data.cards) ? data.cards : [];
+        return el('section', { className: 'section section--light', id: 'pricing' },
+            el('div', { className: 'wrap' },
+                rt('span', data.eyebrow, function (v) { h.setField('eyebrow', v); }, {
+                    plain: true,
+                    className: 'eyebrow',
+                    placeholder: 'Eyebrow…'
+                }),
+                rt('h2', data.title, function (v) { h.setField('title', v); }, {
+                    plain: true,
+                    style: { marginBottom: '14px' },
+                    placeholder: 'Title…'
+                }),
+                rt('p', data.intro, function (v) { h.setField('intro', v); }, {
+                    style: { color: '#444', marginBottom: '20px' },
+                    placeholder: 'Intro…'
+                }),
+                el('div', { className: 'pricing-cards' },
+                    cards.map(function (card, index) {
+                        var className = card.featured ? 'pricing-card pricing-card--featured' : 'pricing-card';
+                        return el('article', { key: 'card-' + index, className: className },
+                            rt('span', card.badge, function (v) { h.setItemField('cards', index, 'badge', v); }, {
+                                plain: true,
+                                key: 'x' + index,
+                                className: 'pricing-badge',
+                                placeholder: 'Badge…'
+                            }),
+                            rt('h3', card.title, function (v) { h.setItemField('cards', index, 'title', v); }, {
+                                plain: true,
+                                placeholder: 'Title…'
+                            }),
+                            rt('p', card.range, function (v) { h.setItemField('cards', index, 'range', v); }, {
+                                plain: true,
+                                className: 'pricing-range',
+                                placeholder: 'Price range…'
+                            }),
+                            rt('p', card.best, function (v) { h.setItemField('cards', index, 'best', v); }, {
+                                className: 'pricing-best',
+                                placeholder: 'Best for…'
+                            })
+                        );
+                    })
+                ),
+                rt('a', data.ctaText, function (v) { h.setField('ctaText', v); }, {
+                    plain: true,
+                    href: (data.ctaUrl || '#calculator'),
+                    className: 'btn-cta btn-cta--solid',
+                    placeholder: 'CTA text…'
+                })
+            )
+        );
     }
 
     function buildCalculatorSection(data) {
         return [
             '<section class="section section--dark" id="calculator">',
             '    <div class="wrap">',
-            '        <div class="card--dark" style="text-align:center;"><span class="eyebrow">' + escapeHtml(data.eyebrow) + '</span>',
-            '            <h2 style="color:#fff;margin-bottom:10px;">' + escapeHtml(data.title) + '</h2>',
-            '            <p style="color:var(--color-muted);max-width:760px;margin:0 auto;">' + escapeHtml(data.body) + '</p>',
+            '        <div class="card--dark" style="text-align:center;"><span class="eyebrow">' + richValue(data.eyebrow) + '</span>',
+            '            <h2 style="color:#fff;margin-bottom:10px;">' + richValue(data.title) + '</h2>',
+            '            <p style="color:var(--color-muted);max-width:760px;margin:0 auto;">' + richValue(data.body) + '</p>',
             '        </div>',
             '    </div>',
             '</section>'
         ].join('');
+    }
+
+    function calculatorEditRender(data, h) {
+        return el('section', { className: 'section section--dark', id: 'calculator' },
+            el('div', { className: 'wrap' },
+                el('div', { className: 'card--dark', style: { textAlign: 'center' } },
+                    rt('span', data.eyebrow, function (v) { h.setField('eyebrow', v); }, {
+                        plain: true,
+                        className: 'eyebrow',
+                        placeholder: 'Eyebrow…'
+                    }),
+                    rt('h2', data.title, function (v) { h.setField('title', v); }, {
+                        plain: true,
+                        style: { color: '#fff', marginBottom: '10px' },
+                        placeholder: 'Title…'
+                    }),
+                    rt('p', data.body, function (v) { h.setField('body', v); }, {
+                        style: { color: 'var(--color-muted)', maxWidth: '760px', margin: '0 auto' },
+                        placeholder: 'Description…'
+                    })
+                )
+            )
+        );
     }
 
     function buildProjectsSection(data) {
@@ -668,8 +1102,8 @@
             return [
                 '<div class="card">',
                 '    <div class="img-cover" style="min-height:190px;background-image:url(\'' + escapeAttr(card.imageUrl) + '\');margin-bottom:14px;"></div>',
-                '    <span class="badge" style="margin-bottom:10px;">' + escapeHtml(card.badge) + '</span>',
-                '    <h3 style="margin-bottom:8px;">' + escapeHtml(card.title) + '</h3>',
+                '    <span class="badge" style="margin-bottom:10px;">' + richValue(card.badge) + '</span>',
+                '    <h3 style="margin-bottom:8px;">' + richValue(card.title) + '</h3>',
                 '</div>'
             ].join('');
         }).join('');
@@ -678,8 +1112,8 @@
             '<section class="section section--light" id="projects">',
             '    <div class="wrap">',
             '        <div style="display:flex;justify-content:space-between;align-items:flex-end;gap:16px;flex-wrap:wrap;margin-bottom:26px;">',
-            '            <div><span class="eyebrow">' + escapeHtml(data.eyebrow) + '</span><h2>' + escapeHtml(data.title) + '</h2></div>',
-            '            <a href="' + escapeAttr(data.viewAllUrl || '#') + '" class="btn btn--dark">' + escapeHtml(data.viewAllText) + '</a>',
+            '            <div><span class="eyebrow">' + richValue(data.eyebrow) + '</span><h2>' + richValue(data.title) + '</h2></div>',
+            '            <a href="' + escapeAttr(data.viewAllUrl || '#') + '" class="btn btn--dark">' + richValue(data.viewAllText) + '</a>',
             '        </div>',
             '        <div class="grid-3">' + cards + '</div>',
             '    </div>',
@@ -687,12 +1121,58 @@
         ].join('');
     }
 
+    function projectsEditRender(data, h) {
+        var cards = Array.isArray(data.cards) ? data.cards : [];
+        return el('section', { className: 'section section--light', id: 'projects' },
+            el('div', { className: 'wrap' },
+                el('div', { style: { display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', gap: '16px', flexWrap: 'wrap', marginBottom: '26px' } },
+                    el('div', null,
+                        rt('span', data.eyebrow, function (v) { h.setField('eyebrow', v); }, {
+                            plain: true,
+                            className: 'eyebrow',
+                            placeholder: 'Eyebrow…'
+                        }),
+                        rt('h2', data.title, function (v) { h.setField('title', v); }, {
+                            plain: true,
+                            placeholder: 'Title…'
+                        })
+                    ),
+                    rt('a', data.viewAllText, function (v) { h.setField('viewAllText', v); }, {
+                        plain: true,
+                        href: (data.viewAllUrl || '#'),
+                        className: 'btn btn--dark',
+                        placeholder: 'View all link…'
+                    })
+                ),
+                el('div', { className: 'grid-3' },
+                    cards.map(function (card, index) {
+                        return el('div', { key: 'card-' + index, className: 'card' },
+                            el('div', { className: 'img-cover', style: { minHeight: '190px', backgroundImage: "url('" + (card.imageUrl || '') + "')", marginBottom: '14px' } }),
+                            rt('span', card.badge, function (v) { h.setItemField('cards', index, 'badge', v); }, {
+                                plain: true,
+                                key: 'x' + index,
+                                className: 'badge',
+                                style: { marginBottom: '10px' },
+                                placeholder: 'Badge…'
+                            }),
+                            rt('h3', card.title, function (v) { h.setItemField('cards', index, 'title', v); }, {
+                                plain: true,
+                                style: { marginBottom: '8px' },
+                                placeholder: 'Title…'
+                            })
+                        );
+                    })
+                )
+            )
+        );
+    }
+
     function buildGlobalComponentsSection(data) {
         var cards = (Array.isArray(data.cards) ? data.cards : []).map(function (card) {
             return [
-                '<div class="card--dark"><span class="eyebrow">' + escapeHtml(card.eyebrow) + '</span>',
-                '    <h3 style="color:#fff;margin-bottom:8px;">' + escapeHtml(card.title) + '</h3>',
-                '    <p style="color:var(--color-muted);font-size:.9rem;">' + escapeHtml(card.desc) + '</p>',
+                '<div class="card--dark"><span class="eyebrow">' + richValue(card.eyebrow) + '</span>',
+                '    <h3 style="color:#fff;margin-bottom:8px;">' + richValue(card.title) + '</h3>',
+                '    <p style="color:var(--color-muted);font-size:.9rem;">' + richValue(card.desc) + '</p>',
                 '</div>'
             ].join('');
         }).join('');
@@ -706,40 +1186,156 @@
         ].join('');
     }
 
+    function globalComponentsEditRender(data, h) {
+        var cards = Array.isArray(data.cards) ? data.cards : [];
+        return el('section', { className: 'section section--dark', id: 'global-components' },
+            el('div', { className: 'wrap' },
+                el('div', { className: 'grid-3' },
+                    cards.map(function (card, index) {
+                        return el('div', { key: 'card-' + index, className: 'card--dark' },
+                            rt('span', card.eyebrow, function (v) { h.setItemField('cards', index, 'eyebrow', v); }, {
+                                plain: true,
+                                key: 'x' + index,
+                                className: 'eyebrow',
+                                placeholder: 'Eyebrow…'
+                            }),
+                            rt('h3', card.title, function (v) { h.setItemField('cards', index, 'title', v); }, {
+                                plain: true,
+                                style: { color: '#fff', marginBottom: '8px' },
+                                placeholder: 'Title…'
+                            }),
+                            rt('p', card.desc, function (v) { h.setItemField('cards', index, 'desc', v); }, {
+                                style: { color: 'var(--color-muted)', fontSize: '.9rem' },
+                                placeholder: 'Description…'
+                            })
+                        );
+                    })
+                )
+            )
+        );
+    }
+
     function buildNearbyAreasSection(data) {
         var areas = (Array.isArray(data.areas) ? data.areas : []).map(function (area) {
-            return '<a href="' + escapeAttr(area.url || '#') + '" class="btn-cta" style="background:#fff;border:1px solid #ddd8ce;color:#333;">' + escapeHtml(area.text) + '</a>';
+            return '<a href="' + escapeAttr(area.url || '#') + '" class="btn-cta" style="background:#fff;border:1px solid #ddd8ce;color:#333;">' + richValue(area.text) + '</a>';
         }).join('');
 
         return [
             '<section class="section section--light" id="areas-nearby">',
-            '    <div class="wrap" style="text-align:center;"><span class="eyebrow">' + escapeHtml(data.eyebrow) + '</span>',
-            '        <h2 style="margin-bottom:12px;">' + escapeHtml(data.title) + '</h2>',
-            '        <p style="max-width:760px;margin:0 auto 20px;color:#555;">' + escapeHtml(data.description) + '</p>',
+            '    <div class="wrap" style="text-align:center;"><span class="eyebrow">' + richValue(data.eyebrow) + '</span>',
+            '        <h2 style="margin-bottom:12px;">' + richValue(data.title) + '</h2>',
+            '        <p style="max-width:760px;margin:0 auto 20px;color:#555;">' + richValue(data.description) + '</p>',
             '        <div style="display:flex;flex-wrap:wrap;gap:10px;justify-content:center;">' + areas + '</div>',
             '    </div>',
             '</section>'
         ].join('');
     }
 
+    function nearbyAreasEditRender(data, h) {
+        var areas = Array.isArray(data.areas) ? data.areas : [];
+        return el('section', { className: 'section section--light', id: 'areas-nearby' },
+            el('div', { className: 'wrap', style: { textAlign: 'center' } },
+                rt('span', data.eyebrow, function (v) { h.setField('eyebrow', v); }, {
+                    plain: true,
+                    className: 'eyebrow',
+                    placeholder: 'Eyebrow…'
+                }),
+                rt('h2', data.title, function (v) { h.setField('title', v); }, {
+                    plain: true,
+                    style: { marginBottom: '12px' },
+                    placeholder: 'Title…'
+                }),
+                rt('p', data.description, function (v) { h.setField('description', v); }, {
+                    style: { maxWidth: '760px', margin: '0 auto 20px', color: '#555' },
+                    placeholder: 'Description…'
+                }),
+                el('div', { style: { display: 'flex', flexWrap: 'wrap', gap: '10px', justifyContent: 'center' } },
+                    areas.map(function (area, index) {
+                        return rt('a', area.text, function (v) { h.setItemField('areas', index, 'text', v); }, {
+                            plain: true,
+                            key: 'x' + index,
+                            href: (area.url || '#'),
+                            className: 'btn-cta',
+                            style: { background: '#fff', border: '1px solid #ddd8ce', color: '#333' },
+                            placeholder: 'Area…'
+                        });
+                    })
+                )
+            )
+        );
+    }
+
     function buildContactSection(data) {
         var pills = (Array.isArray(data.pills) ? data.pills : []).map(function (pill) {
-            return '<span class="pill">' + escapeHtml(pill) + '</span>';
+            return '<span class="pill">' + richValue(pill) + '</span>';
         }).join('');
 
         return [
             '<section class="section section--dark" id="contact" style="position:relative;overflow:hidden;">',
             '    <div class="img-cover" style="position:absolute;inset:0;border-radius:0;background-image:url(\'' + escapeAttr(data.bgImageUrl) + '\');"></div>',
             '    <div style="position:absolute;inset:0;background:rgba(30,30,30,.66);"></div>',
-            '    <div class="wrap" style="position:relative;z-index:2;"><span class="eyebrow">' + escapeHtml(data.eyebrow) + '</span>',
-            '        <h2 style="color:#fff;max-width:760px;margin-bottom:12px;">' + escapeHtml(data.title) + '</h2>',
-            '        <p style="color:var(--color-muted);max-width:820px;margin-bottom:22px;">' + escapeHtml(data.description) + '</p>',
-            '        <div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:18px;"><a href="' + escapeAttr(data.cta1Url || '#') + '" class="btn-cta btn-cta--solid">' + escapeHtml(data.cta1Text) + '</a><a href="' + escapeAttr(data.cta2Url || '#calculator') + '" class="btn btn--white">' + escapeHtml(data.cta2Text) + '</a></div>',
+            '    <div class="wrap" style="position:relative;z-index:2;"><span class="eyebrow">' + richValue(data.eyebrow) + '</span>',
+            '        <h2 style="color:#fff;max-width:760px;margin-bottom:12px;">' + richValue(data.title) + '</h2>',
+            '        <p style="color:var(--color-muted);max-width:820px;margin-bottom:22px;">' + richValue(data.description) + '</p>',
+            '        <div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:18px;"><a href="' + escapeAttr(data.cta1Url || '#') + '" class="btn-cta btn-cta--solid">' + richValue(data.cta1Text) + '</a><a href="' + escapeAttr(data.cta2Url || '#calculator') + '" class="btn btn--white">' + richValue(data.cta2Text) + '</a></div>',
             '        <div class="pill-row" style="margin-bottom:16px;">' + pills + '</div>',
-            '        <p style="color:#fff;font-weight:700;">' + escapeHtml(data.footerText) + '</p>',
+            '        <p style="color:#fff;font-weight:700;">' + richValue(data.footerText) + '</p>',
             '    </div>',
             '</section>'
         ].join('');
+    }
+
+    function contactEditRender(data, h) {
+        var pills = Array.isArray(data.pills) ? data.pills : [];
+        return el('section', { className: 'section section--dark', id: 'contact', style: { position: 'relative', overflow: 'hidden' } },
+            el('div', { className: 'img-cover', style: { position: 'absolute', inset: 0, borderRadius: 0, backgroundImage: "url('" + (data.bgImageUrl || '') + "')" } }),
+            el('div', { style: { position: 'absolute', inset: 0, background: 'rgba(30,30,30,.66)' } }),
+            el('div', { className: 'wrap', style: { position: 'relative', zIndex: 2 } },
+                rt('span', data.eyebrow, function (v) { h.setField('eyebrow', v); }, {
+                    plain: true,
+                    className: 'eyebrow',
+                    placeholder: 'Eyebrow…'
+                }),
+                rt('h2', data.title, function (v) { h.setField('title', v); }, {
+                    plain: true,
+                    style: { color: '#fff', maxWidth: '760px', marginBottom: '12px' },
+                    placeholder: 'Title…'
+                }),
+                rt('p', data.description, function (v) { h.setField('description', v); }, {
+                    style: { color: 'var(--color-muted)', maxWidth: '820px', marginBottom: '22px' },
+                    placeholder: 'Description…'
+                }),
+                el('div', { style: { display: 'flex', gap: '12px', flexWrap: 'wrap', marginBottom: '18px' } },
+                    rt('a', data.cta1Text, function (v) { h.setField('cta1Text', v); }, {
+                        plain: true,
+                        href: (data.cta1Url || '#'),
+                        className: 'btn-cta btn-cta--solid',
+                        placeholder: 'Primary CTA…'
+                    }),
+                    rt('a', data.cta2Text, function (v) { h.setField('cta2Text', v); }, {
+                        plain: true,
+                        href: (data.cta2Url || '#calculator'),
+                        className: 'btn btn--white',
+                        placeholder: 'Secondary CTA…'
+                    })
+                ),
+                el('div', { className: 'pill-row', style: { marginBottom: '16px' } },
+                    pills.map(function (pill, index) {
+                        return rt('span', pill, function (v) { h.setItem('pills', index, v); }, {
+                            plain: true,
+                            key: 'pill-' + index,
+                            className: 'pill',
+                            placeholder: 'Pill…'
+                        });
+                    })
+                ),
+                rt('p', data.footerText, function (v) { h.setField('footerText', v); }, {
+                    plain: true,
+                    style: { color: '#fff', fontWeight: '700' },
+                    placeholder: 'Footer text…'
+                })
+            )
+        );
     }
 
     function buildFaqSection(data) {
@@ -755,8 +1351,8 @@
 
             return [
                 '<div class="' + className + '"' + extraStyle + '>',
-                '    <div class="faq-q">' + escapeHtml(faq.question) + '<span class="faq-toggle"></span></div>',
-                '    <div class="faq-a">' + escapeHtml(faq.answer) + '</div>',
+                '    <div class="faq-q">' + richValue(faq.question) + '<span class="faq-toggle"></span></div>',
+                '    <div class="faq-a">' + richValue(faq.answer) + '</div>',
                 '</div>'
             ].join('');
         }).join('');
@@ -764,12 +1360,53 @@
         return [
             '<section class="section section--dark" id="faq-surrey">',
             '    <div class="wrap">',
-            '        <span class="eyebrow">' + escapeHtml(data.eyebrow) + '</span>',
-            '        <h2 style="color:#fff;margin-bottom:24px;">' + escapeHtml(data.title) + '</h2>',
+            '        <span class="eyebrow">' + richValue(data.eyebrow) + '</span>',
+            '        <h2 style="color:#fff;margin-bottom:24px;">' + richValue(data.title) + '</h2>',
             '        ' + itemsHtml,
             '    </div>',
             '</section>'
         ].join('');
+    }
+
+    function faqEditRender(data, h) {
+        var faqs = Array.isArray(data.faqs) ? data.faqs : [];
+        var hasOpen = faqs.some(function (faq) {
+            return !!faq.open;
+        });
+        return el('section', { className: 'section section--dark', id: 'faq-surrey' },
+            el('div', { className: 'wrap' },
+                rt('span', data.eyebrow, function (v) { h.setField('eyebrow', v); }, {
+                    plain: true,
+                    className: 'eyebrow',
+                    placeholder: 'Eyebrow…'
+                }),
+                rt('h2', data.title, function (v) { h.setField('title', v); }, {
+                    plain: true,
+                    style: { color: '#fff', marginBottom: '24px' },
+                    placeholder: 'Title…'
+                }),
+                faqs.map(function (faq, index) {
+                    var isOpen = hasOpen ? !!faq.open : index === 0;
+                    var className = isOpen ? 'faq-item open' : 'faq-item';
+                    var itemProps = { key: 'faq-' + index, className: className };
+                    if (index === faqs.length - 1) {
+                        itemProps.style = { borderBottom: 'none' };
+                    }
+                    return el('div', itemProps,
+                        el('div', { className: 'faq-q' },
+                            rt('span', faq.question, function (v) { h.setItemField('faqs', index, 'question', v); }, {
+                                placeholder: 'Question…'
+                            }),
+                            el('span', { className: 'faq-toggle' })
+                        ),
+                        rt('div', faq.answer, function (v) { h.setItemField('faqs', index, 'answer', v); }, {
+                            className: 'faq-a',
+                            placeholder: 'Answer…'
+                        })
+                    );
+                })
+            )
+        );
     }
 
     var toneOptions = [
@@ -817,7 +1454,8 @@
                     itemField: { label: 'Pill Text' }
                 }
             ],
-            build: buildHeroSection
+            build: buildHeroSection,
+            editRender: heroEditRender
         },
         'myloft/single-area-trust-bar': {
             title: 'Single Area - Trust Bar',
@@ -842,7 +1480,8 @@
                     itemField: { label: 'Metric Text' }
                 }
             ],
-            build: buildTrustBarSection
+            build: buildTrustBarSection,
+            editRender: trustBarEditRender
         },
         'myloft/single-area-intro': {
             title: 'Single Area - Intro',
@@ -874,7 +1513,8 @@
                     itemField: { label: 'Paragraph Text', type: 'textarea', rows: 4 }
                 }
             ],
-            build: buildIntroSection
+            build: buildIntroSection,
+            editRender: introEditRender
         },
         'myloft/single-area-property-profile': {
             title: 'Single Area - Property Profile',
@@ -958,7 +1598,8 @@
                     ]
                 }
             ],
-            build: buildPropertyProfileSection
+            build: buildPropertyProfileSection,
+            editRender: propertyProfileEditRender
         },
         'myloft/single-area-planning': {
             title: 'Single Area - Planning',
@@ -1064,7 +1705,8 @@
                     itemField: { label: 'Checklist Item', type: 'textarea', rows: 2 }
                 }
             ],
-            build: buildPlanningSection
+            build: buildPlanningSection,
+            editRender: planningEditRender
         },
         'myloft/single-area-collections': {
             title: 'Single Area - Collections',
@@ -1128,7 +1770,8 @@
                     ]
                 }
             ],
-            build: buildCollectionsSection
+            build: buildCollectionsSection,
+            editRender: collectionsEditRender
         },
         'myloft/single-area-pricing': {
             title: 'Single Area - Pricing',
@@ -1207,7 +1850,8 @@
                     ]
                 }
             ],
-            build: buildPricingSection
+            build: buildPricingSection,
+            editRender: pricingEditRender
         },
         'myloft/single-area-calculator': {
             title: 'Single Area - Calculator',
@@ -1223,7 +1867,8 @@
                 { key: 'body', label: 'Description', type: 'textarea', rows: 3 }
             ],
             repeaters: [],
-            build: buildCalculatorSection
+            build: buildCalculatorSection,
+            editRender: calculatorEditRender
         },
         'myloft/single-area-projects': {
             title: 'Single Area - Projects',
@@ -1276,7 +1921,8 @@
                     ]
                 }
             ],
-            build: buildProjectsSection
+            build: buildProjectsSection,
+            editRender: projectsEditRender
         },
         'myloft/single-area-global-components': {
             title: 'Single Area - Global Components',
@@ -1320,7 +1966,8 @@
                     ]
                 }
             ],
-            build: buildGlobalComponentsSection
+            build: buildGlobalComponentsSection,
+            editRender: globalComponentsEditRender
         },
         'myloft/single-area-nearby-areas': {
             title: 'Single Area - Nearby Areas',
@@ -1363,7 +2010,8 @@
                     ]
                 }
             ],
-            build: buildNearbyAreasSection
+            build: buildNearbyAreasSection,
+            editRender: nearbyAreasEditRender
         },
         'myloft/single-area-contact': {
             title: 'Single Area - Contact CTA',
@@ -1407,7 +2055,8 @@
                     itemField: { label: 'Pill Text' }
                 }
             ],
-            build: buildContactSection
+            build: buildContactSection,
+            editRender: contactEditRender
         },
         'myloft/single-area-faq': {
             title: 'Single Area - FAQ',
@@ -1476,7 +2125,8 @@
                     ]
                 }
             ],
-            build: buildFaqSection
+            build: buildFaqSection,
+            editRender: faqEditRender
         }
     };
 
@@ -1532,62 +2182,75 @@
                     });
                 }
 
+                var inlineEdit = typeof config.editRender === 'function';
                 var panels = [];
 
                 if (Array.isArray(config.fields) && config.fields.length) {
-                    panels.push(
-                        el(
-                            PanelBody,
-                            {
-                                key: name + '-fields',
-                                title: 'Section Content',
-                                initialOpen: true
+                    var fieldControls = config.fields.map(function (field) {
+                        return renderFieldControl(
+                            field,
+                            data[field.key],
+                            function (value) {
+                                var nextData = Object.assign({}, data);
+                                nextData[field.key] = value;
+                                setData(nextData);
                             },
-                            config.fields.map(function (field) {
-                                return renderFieldControl(
-                                    field,
-                                    data[field.key],
-                                    function (value) {
-                                        var nextData = Object.assign({}, data);
-                                        nextData[field.key] = value;
-                                        setData(nextData);
-                                    },
-                                    name + '-field-' + field.key
-                                );
-                            })
-                        )
-                    );
+                            name + '-field-' + field.key,
+                            { inline: inlineEdit }
+                        );
+                    }).filter(Boolean);
+
+                    if (fieldControls.length) {
+                        panels.push(
+                            el(
+                                PanelBody,
+                                {
+                                    key: name + '-fields',
+                                    title: 'Section Content',
+                                    initialOpen: true
+                                },
+                                fieldControls
+                            )
+                        );
+                    }
                 }
 
                 (config.repeaters || []).forEach(function (repeater) {
-                    panels.push(renderRepeaterPanel(repeater, data, setData));
+                    panels.push(renderRepeaterPanel(repeater, data, setData, { inline: inlineEdit }));
                 });
+
+                var body;
+                if (inlineEdit) {
+                    // New style: edit the section's text inline on the canvas with
+                    // RichText (formatting + links). Existing content is retained
+                    // because we read/write the same stored `data`.
+                    body = el(
+                        'div',
+                        {
+                            className: 'single-area-blocks',
+                            style: { border: '1px solid #d7d7d7', borderRadius: '8px', overflow: 'hidden' }
+                        },
+                        config.editRender(data, makeEditHelpers(data, setData))
+                    );
+                } else {
+                    body = el(
+                        'div',
+                        {
+                            className: 'single-area-blocks',
+                            style: { border: '1px solid #d7d7d7', borderRadius: '8px', overflow: 'hidden' },
+                            contentEditable: true,
+                            suppressContentEditableWarning: true,
+                            onBlur: function (event) { props.setAttributes({ html: event.currentTarget.innerHTML }); },
+                            dangerouslySetInnerHTML: { __html: previewHtml }
+                        }
+                    );
+                }
 
                 return el(
                     Fragment,
                     null,
                     el(InspectorControls, null, panels),
-                    el(
-                        'div',
-                        blockProps,
-                        el(
-                            'div',
-                            {
-                                className: 'single-area-blocks',
-                                style: {
-                                    border: '1px solid #d7d7d7',
-                                    borderRadius: '8px',
-                                    overflow: 'hidden'
-                                },
-                                contentEditable: true,
-                                suppressContentEditableWarning: true,
-                                onBlur: function (event) {
-                                    props.setAttributes({ html: event.currentTarget.innerHTML });
-                                },
-                                dangerouslySetInnerHTML: { __html: previewHtml }
-                            }
-                        )
-                    )
+                    el('div', blockProps, body)
                 );
             },
             save: function () {

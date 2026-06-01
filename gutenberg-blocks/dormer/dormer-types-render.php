@@ -122,9 +122,9 @@ if ( empty( $types ) ) {
 <section class="section section--light" id="types">
 	<div class="wrap">
 		<div style="text-align:center;margin-bottom:44px;">
-			<span class="eyebrow"><?php echo esc_html( $a['eyebrow'] ); ?></span>
-			<h2 style="margin-bottom:12px;"><?php echo esc_html( $a['h2'] ); ?></h2>
-			<p style="max-width:520px;margin:0 auto;color:#5a5a5a;font-size:0.95rem;"><?php echo esc_html( $a['description'] ); ?></p>
+			<span class="eyebrow"><?php echo blocksy_child_kses_inline( $a['eyebrow'] ); ?></span>
+			<h2 style="margin-bottom:12px;"><?php echo blocksy_child_kses_inline( $a['h2'] ); ?></h2>
+			<p style="max-width:520px;margin:0 auto;color:#5a5a5a;font-size:0.95rem;"><?php echo blocksy_child_kses_inline( $a['description'] ); ?></p>
 		</div>
 		<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:14px;">
 			<?php foreach ( $types as $type ) : ?>
@@ -140,26 +140,26 @@ if ( empty( $types ) ) {
 			<?php if ( $type_featured ) : ?>
 			<div style="background:var(--color-black);border-radius:var(--radius-card);padding:24px 20px;border:2px solid var(--color-orange);position:relative;">
 				<?php if ( '' !== trim( $type_badge_text ) ) : ?>
-				<div style="position:absolute;top:-11px;left:50%;transform:translateX(-50%);"><span class="badge" style="font-size:0.62rem;padding:3px 7px;"><?php echo esc_html( $type_badge_text ); ?></span></div>
+				<div style="position:absolute;top:-11px;left:50%;transform:translateX(-50%);"><span class="badge" style="font-size:0.62rem;padding:3px 7px;"><?php echo blocksy_child_kses_inline( $type_badge_text ); ?></span></div>
 				<?php endif; ?>
-				<h4 style="color:#fff;margin-bottom:6px;font-size:0.95rem;"><?php echo esc_html( $type_name ); ?></h4>
-				<p style="color:var(--color-muted);font-size:0.78rem;margin-bottom:10px;"><?php echo esc_html( $type_desc ); ?></p>
-				<div style="font-size:0.78rem;color:var(--color-orange);font-weight:700;margin-bottom:10px;"><?php echo esc_html( $type_price ); ?></div>
+				<h4 style="color:#fff;margin-bottom:6px;font-size:0.95rem;"><?php echo blocksy_child_kses_inline( $type_name ); ?></h4>
+				<p style="color:var(--color-muted);font-size:0.78rem;margin-bottom:10px;"><?php echo blocksy_child_kses_inline( $type_desc ); ?></p>
+				<div style="font-size:0.78rem;color:var(--color-orange);font-weight:700;margin-bottom:10px;"><?php echo blocksy_child_kses_inline( $type_price ); ?></div>
 				<?php if ( '' !== trim( $type_url ) ) : ?>
-				<a href="<?php echo esc_url( $type_url ); ?>" class="btn btn--white" style="font-size:0.78rem;"><?php echo esc_html( $type_link_text ); ?></a>
+				<a href="<?php echo esc_url( $type_url ); ?>" class="btn btn--white" style="font-size:0.78rem;"><?php echo blocksy_child_kses_inline( $type_link_text ); ?></a>
 				<?php else : ?>
-				<span style="font-size:0.75rem;color:rgba(255,255,255,0.4);font-weight:600;"><?php echo esc_html( $type_link_text ); ?></span>
+				<span style="font-size:0.75rem;color:rgba(255,255,255,0.4);font-weight:600;"><?php echo blocksy_child_kses_inline( $type_link_text ); ?></span>
 				<?php endif; ?>
 			</div>
 			<?php else : ?>
 			<div style="background:var(--color-white);border-radius:var(--radius-card);padding:24px 20px;">
-				<h4 style="margin-bottom:6px;font-size:0.95rem;"><?php echo esc_html( $type_name ); ?></h4>
-				<p style="color:#777;font-size:0.78rem;margin-bottom:10px;"><?php echo esc_html( $type_desc ); ?></p>
-				<div style="font-size:0.78rem;color:var(--color-orange);font-weight:700;margin-bottom:10px;"><?php echo esc_html( $type_price ); ?></div>
+				<h4 style="margin-bottom:6px;font-size:0.95rem;"><?php echo blocksy_child_kses_inline( $type_name ); ?></h4>
+				<p style="color:#777;font-size:0.78rem;margin-bottom:10px;"><?php echo blocksy_child_kses_inline( $type_desc ); ?></p>
+				<div style="font-size:0.78rem;color:var(--color-orange);font-weight:700;margin-bottom:10px;"><?php echo blocksy_child_kses_inline( $type_price ); ?></div>
 				<?php if ( '' !== trim( $type_url ) ) : ?>
-				<a href="<?php echo esc_url( $type_url ); ?>" class="btn btn--dark" style="font-size:0.78rem;"><?php echo esc_html( $type_link_text ); ?></a>
+				<a href="<?php echo esc_url( $type_url ); ?>" class="btn btn--dark" style="font-size:0.78rem;"><?php echo blocksy_child_kses_inline( $type_link_text ); ?></a>
 				<?php else : ?>
-				<span style="font-size:0.78rem;color:#666;font-weight:600;"><?php echo esc_html( $type_link_text ); ?></span>
+				<span style="font-size:0.78rem;color:#666;font-weight:600;"><?php echo blocksy_child_kses_inline( $type_link_text ); ?></span>
 				<?php endif; ?>
 			</div>
 			<?php endif; ?>

@@ -39,6 +39,34 @@ add_action('after_setup_theme', 'blocksy_child_sync_parent_theme_mods', 5);
 add_action('after_switch_theme', 'blocksy_child_sync_parent_theme_mods', 5);
 
 
+/**
+ * Sanitize editable block content while keeping a safe set of inline formatting.
+ *
+ * Content fields in our custom blocks are edited with RichText, so editors can
+ * add links and basic formatting. Rendering them with esc_html() would show the
+ * markup as literal text (e.g. a stray "<br>" on the page). This allows links,
+ * emphasis and line breaks to render, while still stripping anything unsafe.
+ *
+ * @param string $text Raw attribute value coming from the block editor.
+ * @return string Sanitized HTML safe to echo inside block markup.
+ */
+function blocksy_child_kses_inline($text) {
+	$allowed = [
+		'a'      => ['href' => true, 'title' => true, 'target' => true, 'rel' => true],
+		'br'     => [],
+		'strong' => [],
+		'b'      => [],
+		'em'     => [],
+		'i'      => [],
+		'u'      => [],
+		'span'   => ['class' => true, 'style' => true],
+		'sub'    => [],
+		'sup'    => [],
+	];
+
+	return wp_kses((string) $text, $allowed);
+}
+
 
 /**
  * Register custom block pattern categories used by the child theme.

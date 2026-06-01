@@ -13,15 +13,34 @@
     var TextControl = wp.components.TextControl;
     var TextareaControl = wp.components.TextareaControl;
 
+    // Inline editable RichText rendered on the canvas. Restrictive by design:
+    // the editor can only change text, never the layout/structure. opts.plain
+    // (headings, labels, buttons) allows no formatting; otherwise links + bold/italic.
+    function rt(tagName, value, onChange, opts) {
+        opts = opts || {};
+        var props = {
+            tagName: tagName,
+            value: typeof value === 'string' ? value : '',
+            onChange: onChange,
+            allowedFormats: opts.plain ? [] : ['core/bold', 'core/italic', 'core/link']
+        };
+        if (opts.className) { props.className = opts.className; }
+        if (opts.style) { props.style = opts.style; }
+        if (opts.placeholder) { props.placeholder = opts.placeholder; }
+        if (opts.key) { props.key = opts.key; }
+        if (opts.href) { props.href = opts.href; }
+        return el(RichText, props);
+    }
+
     if (typeof getBlockType === 'function' && getBlockType('myloft/dormer-collections')) return;
 
     var collections = [
-        { prefix: 'col1', defaultDesigner: 'Olivia Hart Collection', defaultName: 'Serene', defaultDesc: 'Scandi-minimal · Warm whites, pale oak, soft grey · Master bedroom retreat', defaultPrice: 'From £70,000' },
-        { prefix: 'col2', defaultDesigner: 'Olivia Hart Collection', defaultName: 'Bold', defaultDesc: 'Contemporary · Charcoal, terracotta, brass · Creative office / guest room', defaultPrice: 'From £75,000' },
-        { prefix: 'col3', defaultDesigner: 'James Chen Collection', defaultName: 'Heritage', defaultDesc: 'Modern classic · Warm greys, deep greens, natural wood · Master bedroom + dressing', defaultPrice: 'From £78,000' },
-        { prefix: 'col4', defaultDesigner: 'James Chen Collection', defaultName: 'Urban', defaultDesc: 'Industrial-modern · Black, white, concrete grey, steel · Home office / studio', defaultPrice: 'From £72,000' },
-        { prefix: 'col5', defaultDesigner: 'Priya Sharma Collection', defaultName: 'Family', defaultDesc: 'Playful · Soft pastels, natural woods, white · Nursery / playroom', defaultPrice: 'From £70,000' },
-        { prefix: 'col6', defaultDesigner: 'Priya Sharma Collection', defaultName: 'Haven', defaultDesc: 'Calm retreat · Stone, linen, warm timber, botanical · Bedroom sanctuary', defaultPrice: 'From £74,000' },
+        { prefix: 'col1', defaultDesigner: 'Olivia Hart Collection', defaultName: 'Serene', defaultDesc: 'Scandi-minimal · Warm whites, pale oak, soft grey · Master bedroom retreat', defaultPrice: 'From £70,000', imgDefault: 'https://masterpiececonstruction.co.uk/wp-content/uploads/2023/04/Richmond-scaled.jpg' },
+        { prefix: 'col2', defaultDesigner: 'Olivia Hart Collection', defaultName: 'Bold', defaultDesc: 'Contemporary · Charcoal, terracotta, brass · Creative office / guest room', defaultPrice: 'From £75,000', imgDefault: 'https://masterpiececonstruction.co.uk/wp-content/uploads/2023/04/Chelsea.jpg' },
+        { prefix: 'col3', defaultDesigner: 'James Chen Collection', defaultName: 'Heritage', defaultDesc: 'Modern classic · Warm greys, deep greens, natural wood · Master bedroom + dressing', defaultPrice: 'From £78,000', imgDefault: 'https://masterpiececonstruction.co.uk/wp-content/uploads/2023/04/Putney-2-scaled.jpg' },
+        { prefix: 'col4', defaultDesigner: 'James Chen Collection', defaultName: 'Urban', defaultDesc: 'Industrial-modern · Black, white, concrete grey, steel · Home office / studio', defaultPrice: 'From £72,000', imgDefault: 'https://masterpiececonstruction.co.uk/wp-content/uploads/2023/04/Putney-1-scaled.jpg' },
+        { prefix: 'col5', defaultDesigner: 'Priya Sharma Collection', defaultName: 'Family', defaultDesc: 'Playful · Soft pastels, natural woods, white · Nursery / playroom', defaultPrice: 'From £70,000', imgDefault: 'https://masterpiececonstruction.co.uk/wp-content/uploads/2023/04/Chiswick-scaled.jpg' },
+        { prefix: 'col6', defaultDesigner: 'Priya Sharma Collection', defaultName: 'Haven', defaultDesc: 'Calm retreat · Stone, linen, warm timber, botanical · Bedroom sanctuary', defaultPrice: 'From £74,000', imgDefault: 'https://masterpiececonstruction.co.uk/wp-content/uploads/2023/04/Putney-scaled.jpg' },
     ];
 
     var attrs = {};
@@ -53,11 +72,8 @@
             edit: function (props) {
                 var a = props.attributes;
                 var setAttributes = props.setAttributes;
-                var SSR = wp.serverSideRender && (wp.serverSideRender.default || wp.serverSideRender);
-                var blockProps = useBlockProps({ style: { margin: 0, padding: 0 } });
-                if (!SSR) {
-                    return el('div', blockProps, el('p', { style: { padding: '1em', color: '#666' } }, 'Dormer Collections — preview requires ServerSideRender'));
-                }
+                var blockProps = useBlockProps({ className: 'dormer-loft-blocks', style: { margin: 0, padding: 0 } });
+                function set(key) { return function (v) { var u = {}; u[key] = v; setAttributes(u); }; }
                 function makeSetter(key) {
                     return function (v) { var u = {}; u[key] = v; setAttributes(u); };
                 }
@@ -93,7 +109,34 @@
                             el(TextControl, { label: 'CTA 2 URL', value: a.cta2Url, onChange: function (v) { setAttributes({ cta2Url: v }); } })
                         )
                     ),
-                    el(SSR, { block: 'myloft/dormer-collections', attributes: a })
+                    el('section', { className: 'section section--light', id: 'collections' },
+                        el('div', { className: 'wrap' },
+                            el('div', { style: { textAlign: 'center', marginBottom: '52px' } },
+                                rt('span', a.eyebrow, set('eyebrow'), { plain: true, className: 'eyebrow', placeholder: 'Eyebrow' }),
+                                rt('h2', a.h2, set('h2'), { plain: true, style: { marginBottom: '14px' }, placeholder: 'Heading (H2)' }),
+                                rt('p', a.intro, set('intro'), { style: { maxWidth: '580px', margin: '0 auto', color: '#5a5a5a' }, placeholder: 'Intro' })
+                            ),
+                            el('div', { style: { display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: '20px', marginBottom: '32px' } },
+                                collections.map(function (c, idx) {
+                                    var imgUrl = a[c.prefix + 'ImageUrl'] ? a[c.prefix + 'ImageUrl'] : c.imgDefault;
+                                    return el('div', { className: 'col-card', key: c.prefix },
+                                        el('div', { className: 'img-ph img-ph--light', style: { aspectRatio: '4/3', borderRadius: 'var(--radius-img) var(--radius-img) 0 0', backgroundImage: "url('" + imgUrl + "')", backgroundSize: 'cover', backgroundPosition: 'center' } }),
+                                        el('div', { className: 'col-card__body' },
+                                            rt('div', a[c.prefix + 'Designer'], set(c.prefix + 'Designer'), { plain: true, className: 'col-card__designer', placeholder: 'Designer' }),
+                                            rt('div', a[c.prefix + 'Name'], set(c.prefix + 'Name'), { plain: true, className: 'col-card__name', placeholder: 'Name' }),
+                                            rt('div', a[c.prefix + 'Desc'], set(c.prefix + 'Desc'), { className: 'col-card__desc', placeholder: 'Description' }),
+                                            rt('div', a[c.prefix + 'Price'], set(c.prefix + 'Price'), { plain: true, className: 'col-card__price', placeholder: 'Price' })
+                                        )
+                                    );
+                                })
+                            ),
+                            el('div', { style: { textAlign: 'center' } },
+                                rt('a', a.cta1Text, set('cta1Text'), { plain: true, href: a.cta1Url || '#', className: 'btn-cta btn-cta--solid', placeholder: 'CTA 1' }),
+                                '  ',
+                                rt('a', a.cta2Text, set('cta2Text'), { plain: true, href: a.cta2Url || '#', className: 'btn btn--dark', placeholder: 'CTA 2' })
+                            )
+                        )
+                    )
                 );
             },
             save: function () { return null; },

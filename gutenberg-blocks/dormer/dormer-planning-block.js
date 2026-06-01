@@ -10,6 +10,25 @@
     var TextControl = wp.components.TextControl;
     var TextareaControl = wp.components.TextareaControl;
 
+    // Inline editable RichText rendered on the canvas. Restrictive by design:
+    // the editor can only change text, never the layout/structure. opts.plain
+    // (headings, labels, buttons) allows no formatting; otherwise links + bold/italic.
+    function rt(tagName, value, onChange, opts) {
+        opts = opts || {};
+        var props = {
+            tagName: tagName,
+            value: typeof value === 'string' ? value : '',
+            onChange: onChange,
+            allowedFormats: opts.plain ? [] : ['core/bold', 'core/italic', 'core/link']
+        };
+        if (opts.className) { props.className = opts.className; }
+        if (opts.style) { props.style = opts.style; }
+        if (opts.placeholder) { props.placeholder = opts.placeholder; }
+        if (opts.key) { props.key = opts.key; }
+        if (opts.href) { props.href = opts.href; }
+        return el(RichText, props);
+    }
+
     if (typeof getBlockType === 'function' && getBlockType('myloft/dormer-planning')) return;
 
     try {
@@ -50,12 +69,10 @@
             edit: function (props) {
                 var a = props.attributes;
                 var setAttributes = props.setAttributes;
-                var SSR = wp.serverSideRender && (wp.serverSideRender.default || wp.serverSideRender);
-                var blockProps = useBlockProps({ style: { margin: 0, padding: 0 } });
-                if (!SSR) {
-                    return el('div', blockProps, el('p', { style: { padding: '1em', color: '#666' } }, 'Dormer Planning — preview requires ServerSideRender'));
-                }
+                var blockProps = useBlockProps({ className: 'dormer-loft-blocks', style: { margin: 0, padding: 0 } });
+                function set(key) { return function (v) { var u = {}; u[key] = v; setAttributes(u); }; }
 
+                // Sidebar helpers (from the original InspectorControls).
                 function setAttr(key, v) { var o = {}; o[key] = v; setAttributes(o); }
 
                 function textItem(key) {
@@ -76,6 +93,28 @@
                         el(TextareaControl, { label: 'Description', value: a[descKey] || '', rows: 3, onChange: function (v) { setAttr(descKey, v); } })
                     );
                 }
+
+                // Build the table rows (mirrors the PHP for loop $i = 1..5).
+                var tableRows = [];
+                tableRows.push(el('div', { key: 'th-no', style: { background: '#1e1e1e', padding: '12px 16px', fontSize: '0.72rem', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.07em', color: 'rgba(255,255,255,0.45)' } }, 'No Planning Needed ✓'));
+                tableRows.push(el('div', { key: 'th-req', style: { background: '#1e1e1e', padding: '12px 16px', fontSize: '0.72rem', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.07em', color: 'rgba(255,255,255,0.45)' } }, 'Planning Required ✗'));
+                for (var i = 1; i <= 5; i++) {
+                    (function (i) {
+                        tableRows.push(rt('div', a['noPlan' + i], set('noPlan' + i), { key: 'no-' + i, plain: true, style: { background: 'rgba(255,255,255,0.03)', padding: '10px 16px', fontSize: '0.83rem', color: 'var(--color-muted)', borderTop: '1px solid rgba(255,255,255,0.06)' }, placeholder: 'No-planning item ' + i }));
+                        tableRows.push(rt('div', a['planReq' + i], set('planReq' + i), { key: 'req-' + i, plain: true, style: { background: 'rgba(255,255,255,0.03)', padding: '10px 16px', fontSize: '0.83rem', color: 'var(--color-muted)', borderTop: '1px solid rgba(255,255,255,0.06)' }, placeholder: 'Planning-required item ' + i }));
+                    })(i);
+                }
+
+                // Build the regulation cards (mirrors the PHP foreach reg1..reg4).
+                var regCards = ['reg1', 'reg2', 'reg3', 'reg4'].map(function (r) {
+                    return el('div', { key: r, className: 'card', style: { padding: '16px 20px', borderRadius: '16px', display: 'flex', gap: '14px', alignItems: 'flex-start' } },
+                        rt('div', a[r + 'Badge'], set(r + 'Badge'), { plain: true, style: { flexShrink: 0, width: '32px', height: '32px', background: 'rgba(253,83,32,0.1)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.7rem', fontWeight: '800', color: 'var(--color-orange)' }, placeholder: 'Badge' }),
+                        el('div', null,
+                            rt('h4', a[r + 'Title'], set(r + 'Title'), { plain: true, style: { fontSize: '0.875rem', marginBottom: '2px' }, placeholder: 'Title' }),
+                            rt('p', a[r + 'Desc'], set(r + 'Desc'), { style: { fontSize: '0.8rem', color: '#777' }, placeholder: 'Description' })
+                        )
+                    );
+                });
 
                 return el('div', blockProps,
                     el(InspectorControls, {},
@@ -104,7 +143,30 @@
                         regPanel(3, false),
                         regPanel(4, false)
                     ),
-                    el(SSR, { block: 'myloft/dormer-planning', attributes: a })
+                    el('section', { className: 'section section--light', id: 'planning' },
+                        el('div', { className: 'wrap' },
+                            el('div', { style: { textAlign: 'center', marginBottom: '52px' } },
+                                rt('span', a.eyebrow, set('eyebrow'), { plain: true, className: 'eyebrow', placeholder: 'Eyebrow' }),
+                                rt('h2', a.h2, set('h2'), { plain: true, style: { marginBottom: '12px' }, placeholder: 'Heading' }),
+                                rt('p', a.intro, set('intro'), { style: { maxWidth: '560px', margin: '0 auto', color: '#5a5a5a' }, placeholder: 'Intro' })
+                            ),
+                            el('div', { className: 'grid-2', style: { gap: '36px', alignItems: 'flex-start' } },
+                                el('div', { style: { background: 'var(--color-black)', borderRadius: 'var(--radius-card)', padding: '32px', overflow: 'hidden' } },
+                                    el('h3', { style: { color: '#fff', marginBottom: '20px', fontSize: '1rem' } }, 'Permitted Development vs Planning Permission'),
+                                    el('div', { style: { display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1px', background: 'rgba(255,255,255,0.08)', borderRadius: '10px', overflow: 'hidden' } },
+                                        tableRows
+                                    ),
+                                    rt('p', a.footnote, set('footnote'), { style: { color: 'rgba(255,255,255,0.35)', fontSize: '0.78rem', marginTop: '16px' }, placeholder: 'Footnote' })
+                                ),
+                                el('div', null,
+                                    el('h3', { style: { marginBottom: '18px', fontSize: '1rem' } }, 'Building Regulations — What We Cover'),
+                                    el('div', { style: { display: 'flex', flexDirection: 'column', gap: '10px' } },
+                                        regCards
+                                    )
+                                )
+                            )
+                        )
+                    )
                 );
             },
             save: function () { return null; },

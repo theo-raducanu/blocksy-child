@@ -45,9 +45,9 @@ $included = array_values( [ 'inc1','inc2','inc3','inc4','inc5','inc6','inc7','in
 <section class="section section--dark" id="why-my-loft">
 	<div class="wrap">
 		<div style="text-align:center;margin-bottom:56px;">
-			<span class="eyebrow"><?php echo esc_html( $a['eyebrow'] ); ?></span>
-			<h2 style="color:#fff;margin-bottom:12px;"><?php echo esc_html( $a['h2'] ); ?></h2>
-			<h3 style="color:rgba(255,255,255,0.7) !important;font-size:1rem !important;font-weight:400 !important;line-height:1.6 !important;letter-spacing:normal !important;text-transform:none !important;max-width:720px !important;margin:16px auto 0 !important;font-family:inherit !important;"><?php echo esc_html( $a['h3Subtitle'] ); ?></h3>
+			<span class="eyebrow"><?php echo blocksy_child_kses_inline( $a['eyebrow'] ); ?></span>
+			<h2 style="color:#fff;margin-bottom:12px;"><?php echo blocksy_child_kses_inline( $a['h2'] ); ?></h2>
+			<h3 style="color:rgba(255,255,255,0.7) !important;font-size:1rem !important;font-weight:400 !important;line-height:1.6 !important;letter-spacing:normal !important;text-transform:none !important;max-width:720px !important;margin:16px auto 0 !important;font-family:inherit !important;"><?php echo blocksy_child_kses_inline( $a['h3Subtitle'] ); ?></h3>
 		</div>
 		<div class="grid-3" style="margin-bottom:32px;">
 			<?php
@@ -59,39 +59,39 @@ $included = array_values( [ 'inc1','inc2','inc3','inc4','inc5','inc6','inc7','in
 			foreach ( $usps as $idx => $usp ) : ?>
 			<div class="card" style="text-align:center;">
 				<div class="icon-wrap" style="margin:0 auto 18px;"><svg class="icon" viewBox="0 0 24 24"><?php echo $usp_icons[ $idx ]; ?></svg></div>
-				<span class="badge badge--light" style="margin-bottom:12px;"><?php echo esc_html( $usp['badge'] ); ?></span>
-				<h3 style="margin-bottom:10px;"><?php echo esc_html( $usp['h3'] ); ?></h3>
-				<p style="color:#5a5a5a;font-size:0.875rem;"><?php echo esc_html( $usp['p'] ); ?></p>
+				<span class="badge badge--light" style="margin-bottom:12px;"><?php echo blocksy_child_kses_inline( $usp['badge'] ); ?></span>
+				<h3 style="margin-bottom:10px;"><?php echo blocksy_child_kses_inline( $usp['h3'] ); ?></h3>
+				<p style="color:#5a5a5a;font-size:0.875rem;"><?php echo blocksy_child_kses_inline( $usp['p'] ); ?></p>
 			</div>
 			<?php endforeach; ?>
 		</div>
 		<div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:48px;">
 			<div class="card--dark">
 				<div class="icon-wrap icon-wrap--white" style="margin-bottom:16px;"><svg class="icon icon--white" viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z" /></svg></div>
-				<h3 style="color:#fff;margin-bottom:8px;"><?php echo esc_html( $a['dark1H3'] ); ?></h3>
-				<p style="color:var(--color-muted);font-size:0.875rem;"><?php echo esc_html( $a['dark1P'] ); ?></p>
+				<h3 style="color:#fff;margin-bottom:8px;"><?php echo blocksy_child_kses_inline( $a['dark1H3'] ); ?></h3>
+				<p style="color:var(--color-muted);font-size:0.875rem;"><?php echo blocksy_child_kses_inline( $a['dark1P'] ); ?></p>
 			</div>
 			<div class="card--dark">
 				<div class="icon-wrap icon-wrap--white" style="margin-bottom:16px;"><svg class="icon icon--white" viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 10.99h7c-.53 4.12-3.28 7.79-7 8.94V12H5V6.3l7-3.11v8.8z" /></svg></div>
-				<h3 style="color:#fff;margin-bottom:8px;"><?php echo esc_html( $a['dark2H3'] ); ?></h3>
-				<p style="color:var(--color-muted);font-size:0.875rem;"><?php echo esc_html( $a['dark2P'] ); ?></p>
+				<h3 style="color:#fff;margin-bottom:8px;"><?php echo blocksy_child_kses_inline( $a['dark2H3'] ); ?></h3>
+				<p style="color:var(--color-muted);font-size:0.875rem;"><?php echo blocksy_child_kses_inline( $a['dark2P'] ); ?></p>
 			</div>
 		</div>
 		<div style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:var(--radius-card);padding:36px;">
-			<h3 style="color:#fff;margin-bottom:24px;text-align:center;"><?php echo esc_html( $a['includedTitle'] ); ?></h3>
+			<h3 style="color:#fff;margin-bottom:24px;text-align:center;"><?php echo blocksy_child_kses_inline( $a['includedTitle'] ); ?></h3>
 			<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px 48px;">
 				<?php foreach ( $included as $idx => $key ) :
 					$is_last_pair = ( $idx >= 8 );
 				?>
 				<div style="display:flex;align-items:center;gap:10px;color:var(--color-muted);font-size:0.875rem;padding:6px 0;<?php echo $is_last_pair ? '' : 'border-bottom:1px solid rgba(255,255,255,0.06);'; ?>">
-					<span style="color:var(--color-orange);font-weight:800;font-size:0.8rem;">✓</span><?php echo esc_html( $a[ $key ] ); ?>
+					<span style="color:var(--color-orange);font-weight:800;font-size:0.8rem;">✓</span><span><?php echo blocksy_child_kses_inline( $a[ $key ] ); ?></span>
 				</div>
 				<?php endforeach; ?>
 			</div>
 		</div>
 		<div style="margin-top:36px;text-align:center;display:flex;justify-content:center;gap:20px;flex-wrap:wrap;">
-			<a href="<?php echo esc_url( $a['cta1Url'] ); ?>" class="btn-cta btn-cta--solid"><?php echo esc_html( $a['cta1Text'] ); ?></a>
-			<a href="<?php echo esc_url( $a['cta2Url'] ); ?>" class="btn btn--white"><?php echo esc_html( $a['cta2Text'] ); ?></a>
+			<a href="<?php echo esc_url( $a['cta1Url'] ); ?>" class="btn-cta btn-cta--solid"><?php echo blocksy_child_kses_inline( $a['cta1Text'] ); ?></a>
+			<a href="<?php echo esc_url( $a['cta2Url'] ); ?>" class="btn btn--white"><?php echo blocksy_child_kses_inline( $a['cta2Text'] ); ?></a>
 		</div>
 	</div>
 </section>

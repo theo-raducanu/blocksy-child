@@ -27,25 +27,25 @@ $a = wp_parse_args( array_filter( $_raw, function( $v ) { return $v !== ''; } ),
 <section class="section section--light" id="pricing">
 	<div class="wrap">
 		<div style="text-align:center;margin-bottom:52px;">
-			<span class="eyebrow"><?php echo esc_html( $a['eyebrow'] ); ?></span>
-			<h2 style="margin-bottom:12px;"><?php echo esc_html( $a['h2'] ); ?></h2>
-			<p style="max-width:560px;margin:0 auto;color:#5a5a5a;"><?php echo esc_html( $a['intro'] ); ?></p>
+			<span class="eyebrow"><?php echo blocksy_child_kses_inline( $a['eyebrow'] ); ?></span>
+			<h2 style="margin-bottom:12px;"><?php echo blocksy_child_kses_inline( $a['h2'] ); ?></h2>
+			<p style="max-width:560px;margin:0 auto;color:#5a5a5a;"><?php echo blocksy_child_kses_inline( $a['intro'] ); ?></p>
 		</div>
 		<div class="grid-2" style="gap:36px;align-items:flex-start;">
 			<div style="background:var(--color-black);border-radius:var(--radius-card);padding:36px;">
-				<p style="color:rgba(255,255,255,0.45);font-size:0.72rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:20px;"><?php echo esc_html( $a['tableCaption'] ); ?></p>
+				<p style="color:rgba(255,255,255,0.45);font-size:0.72rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:20px;"><?php echo blocksy_child_kses_inline( $a['tableCaption'] ); ?></p>
 				<table class="price-table">
 					<thead><tr><th>Element</th><th>Typical Range</th></tr></thead>
 					<tbody>
 						<?php for ( $i = 1; $i <= 7; $i++ ) : ?>
 						<tr>
-							<td><?php echo wp_kses_post( $a[ 'row' . $i . 'Name' ] ); ?></td>
-							<td><?php echo esc_html( $a[ 'row' . $i . 'Range' ] ); ?></td>
+							<td><?php echo blocksy_child_kses_inline( $a[ 'row' . $i . 'Name' ] ); ?></td>
+							<td><?php echo blocksy_child_kses_inline( $a[ 'row' . $i . 'Range' ] ); ?></td>
 						</tr>
 						<?php endfor; ?>
 					</tbody>
 				</table>
-				<p style="color:rgba(255,255,255,0.35);font-size:0.78rem;margin-top:18px;"><?php echo esc_html( $a['tableFootnote'] ); ?></p>
+				<p style="color:rgba(255,255,255,0.35);font-size:0.78rem;margin-top:18px;"><?php echo blocksy_child_kses_inline( $a['tableFootnote'] ); ?></p>
 			</div>
 			<div style="display:flex;flex-direction:column;gap:24px;">
 				<div>
@@ -61,7 +61,7 @@ $a = wp_parse_args( array_filter( $_raw, function( $v ) { return $v !== ''; } ),
 						foreach ( $roi_rows as $i => $row ) : ?>
 						<div style="display:flex;justify-content:space-between;padding:8px 0;<?php echo $i < 3 ? 'border-bottom:1px solid rgba(253,83,32,0.12);' : ''; ?>font-size:<?php echo $row[2] ? '0.95rem' : '0.9rem'; ?>">
 							<span style="color:#5a5a5a;"><?php echo esc_html( $row[0] ); ?></span>
-							<strong <?php echo $row[2] ? 'style="color:var(--color-orange);font-size:1rem;"' : ''; ?>><?php echo esc_html( $a[ $row[1] ] ); ?></strong>
+							<strong <?php echo $row[2] ? 'style="color:var(--color-orange);font-size:1rem;"' : ''; ?>><?php echo blocksy_child_kses_inline( $a[ $row[1] ] ); ?></strong>
 						</div>
 						<?php endforeach; ?>
 					</div>
@@ -73,15 +73,15 @@ $a = wp_parse_args( array_filter( $_raw, function( $v ) { return $v !== ''; } ),
 					<?php if ( $fin !== 'fin3' ) : ?>
 					<div class="card" style="padding:16px 20px;border-radius:16px;display:flex;justify-content:space-between;align-items:center;">
 						<div>
-							<h4 style="font-size:0.9rem;margin-bottom:2px;"><?php echo esc_html( $a[ $fin . 'Title' ] ); ?></h4>
-							<p style="font-size:0.8rem;color:#888;"><?php echo esc_html( $a[ $fin . 'Sub' ] ); ?></p>
+							<h4 style="font-size:0.9rem;margin-bottom:2px;"><?php echo blocksy_child_kses_inline( $a[ $fin . 'Title' ] ); ?></h4>
+							<p style="font-size:0.8rem;color:#888;"><?php echo blocksy_child_kses_inline( $a[ $fin . 'Sub' ] ); ?></p>
 						</div>
-						<span class="badge badge--light"><?php echo esc_html( $a[ $fin . 'Badge' ] ); ?></span>
+						<span class="badge badge--light"><?php echo blocksy_child_kses_inline( $a[ $fin . 'Badge' ] ); ?></span>
 					</div>
 					<?php else : ?>
 					<div class="card" style="padding:16px 20px;border-radius:16px;">
-						<h4 style="font-size:0.9rem;margin-bottom:2px;"><?php echo esc_html( $a[ $fin . 'Title' ] ); ?></h4>
-						<p style="font-size:0.8rem;color:#888;"><?php echo esc_html( $a[ $fin . 'Sub' ] ); ?></p>
+						<h4 style="font-size:0.9rem;margin-bottom:2px;"><?php echo blocksy_child_kses_inline( $a[ $fin . 'Title' ] ); ?></h4>
+						<p style="font-size:0.8rem;color:#888;"><?php echo blocksy_child_kses_inline( $a[ $fin . 'Sub' ] ); ?></p>
 					</div>
 					<?php endif; ?>
 						<?php endforeach; ?>

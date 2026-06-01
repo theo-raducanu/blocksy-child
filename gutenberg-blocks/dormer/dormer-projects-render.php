@@ -30,10 +30,10 @@ $a = wp_parse_args( array_filter( $_raw, function( $v ) { return $v !== ''; } ),
 	<div class="wrap">
 		<div style="display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:44px;flex-wrap:wrap;gap:16px;">
 			<div>
-				<span class="eyebrow"><?php echo esc_html( $a['eyebrow'] ); ?></span>
-				<h2 style="color:#fff;"><?php echo esc_html( $a['h2'] ); ?></h2>
+				<span class="eyebrow"><?php echo blocksy_child_kses_inline( $a['eyebrow'] ); ?></span>
+				<h2 style="color:#fff;"><?php echo blocksy_child_kses_inline( $a['h2'] ); ?></h2>
 			</div>
-			<a href="<?php echo esc_url( $a['viewAllUrl'] ); ?>" class="btn btn--white"><?php echo esc_html( $a['viewAllText'] ); ?></a>
+			<a href="<?php echo esc_url( $a['viewAllUrl'] ); ?>" class="btn btn--white"><?php echo blocksy_child_kses_inline( $a['viewAllText'] ); ?></a>
 		</div>
 		<div class="grid-3" style="margin-bottom:36px;">
 			<?php for ( $i = 1; $i <= 3; $i++ ) :
@@ -41,17 +41,17 @@ $a = wp_parse_args( array_filter( $_raw, function( $v ) { return $v !== ''; } ),
 			?>
 			<div>
 				<div class="img-ph" style="aspect-ratio:4/3;background-image:url('<?php echo esc_url( $img_url ); ?>');background-size:cover;background-position:center;"></div>
-				<p style="color:#fff;font-weight:600;font-size:0.9rem;margin-top:10px;"><?php echo esc_html( $a[ 'proj' . $i . 'Title' ] ); ?></p>
-				<p style="color:var(--color-grey-icon);font-size:0.8rem;"><?php echo esc_html( $a[ 'proj' . $i . 'Detail' ] ); ?></p>
+				<p style="color:#fff;font-weight:600;font-size:0.9rem;margin-top:10px;"><?php echo blocksy_child_kses_inline( $a[ 'proj' . $i . 'Title' ] ); ?></p>
+				<p style="color:var(--color-grey-icon);font-size:0.8rem;"><?php echo blocksy_child_kses_inline( $a[ 'proj' . $i . 'Detail' ] ); ?></p>
 			</div>
 			<?php endfor; ?>
 		</div>
 		<div class="grid-3">
 			<?php for ( $i = 1; $i <= 3; $i++ ) : ?>
 			<div style="background:var(--color-white);border-radius:var(--radius-card);padding:28px 32px;">
-				<p style="font-size:0.9rem;line-height:1.75;color:#3a3a3a;font-style:italic;margin-bottom:16px;"><?php echo wp_kses_post( $a[ 'test' . $i . 'Quote' ] ); ?></p>
-				<div style="font-size:0.875rem;font-weight:700;color:var(--color-black);"><?php echo wp_kses_post( $a[ 'test' . $i . 'Name' ] ); ?></div>
-				<div style="font-size:0.78rem;color:#999;margin-top:2px;"><?php echo esc_html( $a[ 'test' . $i . 'Loc' ] ); ?></div>
+				<p style="font-size:0.9rem;line-height:1.75;color:#3a3a3a;font-style:italic;margin-bottom:16px;"><?php echo blocksy_child_kses_inline( $a[ 'test' . $i . 'Quote' ] ); ?></p>
+				<div style="font-size:0.875rem;font-weight:700;color:var(--color-black);"><?php echo blocksy_child_kses_inline( $a[ 'test' . $i . 'Name' ] ); ?></div>
+				<div style="font-size:0.78rem;color:#999;margin-top:2px;"><?php echo blocksy_child_kses_inline( $a[ 'test' . $i . 'Loc' ] ); ?></div>
 			</div>
 			<?php endfor; ?>
 		</div>

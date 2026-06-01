@@ -13,6 +13,24 @@
     var TextControl = wp.components.TextControl;
     var TextareaControl = wp.components.TextareaControl;
 
+    // Inline editable RichText rendered on the canvas. Restrictive by design:
+    // the editor can only change text, never the layout/structure. opts.plain
+    // (headings, labels) allows no formatting; otherwise links + bold/italic.
+    function rt(tagName, value, onChange, opts) {
+        opts = opts || {};
+        var props = {
+            tagName: tagName,
+            value: typeof value === 'string' ? value : '',
+            onChange: onChange,
+            allowedFormats: opts.plain ? [] : ['core/bold', 'core/italic', 'core/link']
+        };
+        if (opts.className) { props.className = opts.className; }
+        if (opts.style) { props.style = opts.style; }
+        if (opts.placeholder) { props.placeholder = opts.placeholder; }
+        if (opts.key) { props.key = opts.key; }
+        return el(RichText, props);
+    }
+
     if (typeof getBlockType === 'function' && getBlockType('myloft/dormer-what-is')) return;
 
     try {
@@ -40,11 +58,9 @@
             edit: function (props) {
                 var attrs = props.attributes;
                 var setAttributes = props.setAttributes;
-                var SSR = wp.serverSideRender && (wp.serverSideRender.default || wp.serverSideRender);
-                var blockProps = useBlockProps({ style: { margin: 0, padding: 0 } });
-                if (!SSR) {
-                    return el('div', blockProps, el('p', { style: { padding: '1em', color: '#666' } }, 'Dormer What Is — preview requires ServerSideRender'));
-                }
+                var blockProps = useBlockProps({ className: 'dormer-loft-blocks', style: { margin: 0, padding: 0 } });
+                function set(key) { return function (v) { var u = {}; u[key] = v; setAttributes(u); }; }
+                var imageUrl = attrs.imageUrl || 'https://masterpiececonstruction.co.uk/wp-content/uploads/2023/04/Kew.jpg';
                 return el('div', blockProps,
                     el(InspectorControls, {},
                         el(PanelBody, { title: 'Section Content', initialOpen: true },
@@ -78,7 +94,31 @@
                             el(TextControl, { label: 'Alt Text', value: attrs.imageAlt, onChange: function (v) { setAttributes({ imageAlt: v }); } })
                         )
                     ),
-                    el(SSR, { block: 'myloft/dormer-what-is', attributes: attrs })
+                    el('section', { className: 'section section--light', id: 'what-is-dormer' },
+                        el('div', { className: 'wrap' },
+                            el('div', { className: 'grid-2', style: { gap: '64px' } },
+                                el('div', null,
+                                    rt('span', attrs.eyebrow, set('eyebrow'), { plain: true, className: 'eyebrow', placeholder: 'Eyebrow' }),
+                                    rt('h2', attrs.h2, set('h2'), { plain: true, style: { marginBottom: '20px' }, placeholder: 'Heading' }),
+                                    rt('p', attrs.para1, set('para1'), { style: { color: '#3a3a3a', marginBottom: '16px' }, placeholder: 'Paragraph 1' }),
+                                    rt('p', attrs.para2, set('para2'), { style: { color: '#5a5a5a', marginBottom: '24px' }, placeholder: 'Paragraph 2' }),
+                                    rt('h3', attrs.h3, set('h3'), { plain: true, style: { marginBottom: '14px', fontSize: '1rem' }, placeholder: 'Subheading' }),
+                                    el('ul', { className: 'checklist checklist--light' },
+                                        [1, 2, 3, 4].map(function (n) {
+                                            return el('li', { key: 'chk-' + n },
+                                                el('span', { className: 'chk' }, '✓'),
+                                                rt('span', attrs['check' + n], set('check' + n), { placeholder: 'Check ' + n })
+                                            );
+                                        })
+                                    ),
+                                    rt('p', attrs.note, set('note'), { style: { color: '#999', fontSize: '0.85rem', marginTop: '14px' }, placeholder: 'Note' })
+                                ),
+                                el('div', null,
+                                    el('div', { className: 'img-ph img-ph--light', style: { width: '100%', aspectRatio: '4/3', backgroundImage: "url('" + imageUrl + "')", backgroundSize: 'cover', backgroundPosition: 'center' } })
+                                )
+                            )
+                        )
+                    )
                 );
             },
             save: function () { return null; },

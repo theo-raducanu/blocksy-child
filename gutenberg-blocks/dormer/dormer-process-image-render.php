@@ -27,10 +27,10 @@ $image_url = ! empty( $a['imageUrl'] ) ? $a['imageUrl'] : 'https://masterpiececo
 <section class="section section--dark" id="process-image">
 	<div class="wrap">
 		<div style="text-align:center;margin-bottom:56px;">
-			<span class="eyebrow"><?php echo esc_html( $a['eyebrow'] ); ?></span>
-			<h2 style="color:#fff;"><?php echo esc_html( $a['h2'] ); ?></h2>
+			<span class="eyebrow"><?php echo blocksy_child_kses_inline( $a['eyebrow'] ); ?></span>
+			<h2 style="color:#fff;"><?php echo blocksy_child_kses_inline( $a['h2'] ); ?></h2>
 			<?php if ( ! empty( $a['intro'] ) ) : ?>
-			<p class="section-intro" style="color:rgba(255,255,255,0.7);max-width:720px;margin:16px auto 0;font-size:1rem;line-height:1.6;"><?php echo esc_html( $a['intro'] ); ?></p>
+			<p class="section-intro" style="color:rgba(255,255,255,0.7);max-width:720px;margin:16px auto 0;font-size:1rem;line-height:1.6;"><?php echo blocksy_child_kses_inline( $a['intro'] ); ?></p>
 			<?php endif; ?>
 		</div>
 		<div class="grid-2" style="gap:64px;align-items:flex-start;">
@@ -44,8 +44,8 @@ $image_url = ! empty( $a['imageUrl'] ) ? $a['imageUrl'] : 'https://masterpiececo
 					<div style="display:flex;gap:16px;padding:14px 0;border-bottom:<?php echo $i < 8 ? '1px solid rgba(255,255,255,0.07)' : 'none'; ?>;align-items:flex-start;">
 						<div class="step-num" style="width:32px;height:32px;font-size:0.75rem;"><?php echo sprintf( '%02d', $i ); ?></div>
 						<div>
-							<div style="color:#fff;font-weight:600;font-size:0.9rem;"><?php echo esc_html( $a[ 'step' . $i . 'Title' ] ); ?></div>
-							<div style="color:var(--color-muted);font-size:0.82rem;"><?php echo esc_html( $a[ 'step' . $i . 'Desc' ] ); ?></div>
+							<div style="color:#fff;font-weight:600;font-size:0.9rem;"><?php echo blocksy_child_kses_inline( $a[ 'step' . $i . 'Title' ] ); ?></div>
+							<div style="color:var(--color-muted);font-size:0.82rem;"><?php echo blocksy_child_kses_inline( $a[ 'step' . $i . 'Desc' ] ); ?></div>
 						</div>
 					</div>
 					<?php endfor; ?>
@@ -53,8 +53,8 @@ $image_url = ! empty( $a['imageUrl'] ) ? $a['imageUrl'] : 'https://masterpiececo
 			</div>
 		</div>
 		<div style="margin-top:44px;text-align:center;display:flex;justify-content:center;gap:20px;flex-wrap:wrap;">
-			<a href="<?php echo esc_url( $a['cta1Url'] ); ?>" class="btn-cta btn-cta--solid"><?php echo esc_html( $a['cta1Text'] ); ?></a>
-			<a href="<?php echo esc_url( $a['cta2Url'] ); ?>" class="btn btn--white"><?php echo esc_html( $a['cta2Text'] ); ?></a>
+			<a href="<?php echo esc_url( $a['cta1Url'] ); ?>" class="btn-cta btn-cta--solid"><?php echo blocksy_child_kses_inline( $a['cta1Text'] ); ?></a>
+			<a href="<?php echo esc_url( $a['cta2Url'] ); ?>" class="btn btn--white"><?php echo blocksy_child_kses_inline( $a['cta2Text'] ); ?></a>
 		</div>
 	</div>
 </section>

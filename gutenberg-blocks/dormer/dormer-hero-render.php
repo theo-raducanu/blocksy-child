@@ -26,15 +26,15 @@ $hero = wp_parse_args(array_filter($_raw_hero, function($v) { return $v !== ''; 
 	></div>
 	<div style="position:absolute;inset:0;background-color: var(--wp--preset--color--palette-color-3, var(--theme-palette-color-3, #1e1e1e)); opacity: 0.66;"></div>
 	<div class="wrap" style="position:relative;z-index:2;width:var(--theme-container-width,1200px);max-width:var(--theme-normal-container-max-width,1200px);">
-		<h1 style="color:#fff;max-width:680px;margin-bottom:20px;"><?php echo esc_html($hero['title']); ?></h1>
-		<p style="color:rgba(255,255,255,0.82);font-size:1.1rem;max-width:540px;margin-bottom:40px;line-height:1.7;"><?php echo esc_html($hero['subtitle']); ?></p>
+		<h1 style="color:#fff;max-width:680px;margin-bottom:20px;"><?php echo blocksy_child_kses_inline($hero['title']); ?></h1>
+		<p style="color:rgba(255,255,255,0.82);font-size:1.1rem;max-width:540px;margin-bottom:40px;line-height:1.7;"><?php echo blocksy_child_kses_inline($hero['subtitle']); ?></p>
 		<?php if (!empty($hero['showPrimaryCta']) || !empty($hero['showSecondaryCta'])) : ?>
 		<div style="display:flex;gap:18px;flex-wrap:wrap;align-items:center;">
 			<?php if (!empty($hero['showPrimaryCta'])) : ?>
-			<a href="<?php echo esc_url($hero['primaryCtaUrl']); ?>" class="btn-cta btn-cta--solid"><?php echo esc_html($hero['primaryCtaText']); ?></a>
+			<a href="<?php echo esc_url($hero['primaryCtaUrl']); ?>" class="btn-cta btn-cta--solid"><?php echo blocksy_child_kses_inline($hero['primaryCtaText']); ?></a>
 			<?php endif; ?>
 			<?php if (!empty($hero['showSecondaryCta'])) : ?>
-			<a href="<?php echo esc_url($hero['secondaryCtaUrl']); ?>" class="btn btn--white"><?php echo esc_html($hero['secondaryCtaText']); ?></a>
+			<a href="<?php echo esc_url($hero['secondaryCtaUrl']); ?>" class="btn btn--white"><?php echo blocksy_child_kses_inline($hero['secondaryCtaText']); ?></a>
 			<?php endif; ?>
 		</div>
 		<?php endif; ?>

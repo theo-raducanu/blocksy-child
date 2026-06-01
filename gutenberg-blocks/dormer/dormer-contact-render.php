@@ -21,12 +21,12 @@ $bg_img = ! empty( $a['bgImageUrl'] ) ? $a['bgImageUrl'] : 'https://masterpiecec
 	<div class="wrap" style="position:relative;z-index:2;">
 		<div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:28px;">
 			<div>
-				<span class="eyebrow"><?php echo esc_html( $a['eyebrow'] ); ?></span>
-				<h2 style="color:#fff;max-width:520px;"><?php echo esc_html( $a['h2'] ); ?></h2>
+				<span class="eyebrow"><?php echo blocksy_child_kses_inline( $a['eyebrow'] ); ?></span>
+				<h2 style="color:#fff;max-width:520px;"><?php echo blocksy_child_kses_inline( $a['h2'] ); ?></h2>
 			</div>
 			<div style="display:flex;flex-direction:column;gap:12px;align-items:anchor-center;">
-				<a href="<?php echo esc_url( $a['cta1Url'] ); ?>" class="btn-cta btn-cta--solid"><?php echo esc_html( $a['cta1Text'] ); ?></a>
-				<a href="<?php echo esc_url( $a['cta2Url'] ); ?>" class="btn btn--white" style="font-size:0.875rem;"><?php echo esc_html( $a['cta2Text'] ); ?></a>
+				<a href="<?php echo esc_url( $a['cta1Url'] ); ?>" class="btn-cta btn-cta--solid"><?php echo blocksy_child_kses_inline( $a['cta1Text'] ); ?></a>
+				<a href="<?php echo esc_url( $a['cta2Url'] ); ?>" class="btn btn--white" style="font-size:0.875rem;"><?php echo blocksy_child_kses_inline( $a['cta2Text'] ); ?></a>
 			</div>
 		</div>
 	</div>

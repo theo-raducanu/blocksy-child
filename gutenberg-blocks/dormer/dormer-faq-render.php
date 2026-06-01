@@ -70,16 +70,16 @@ if ( empty( $faqs ) ) {
 	<div class="wrap">
 		<div class="grid-2" style="gap:64px;align-items:flex-start;">
 			<div>
-				<span class="eyebrow"><?php echo esc_html( $a['eyebrow'] ); ?></span>
-				<h2 style="color:#fff;margin-bottom:36px;"><?php echo esc_html( $a['h2'] ); ?></h2>
+				<span class="eyebrow"><?php echo blocksy_child_kses_inline( $a['eyebrow'] ); ?></span>
+				<h2 style="color:#fff;margin-bottom:36px;"><?php echo blocksy_child_kses_inline( $a['h2'] ); ?></h2>
 				<?php foreach ( $faqs as $index => $row ) : ?>
 				<?php
 				$item_classes = ( 0 === $index ) ? 'faq-item open' : 'faq-item';
 				$item_style = ( $index === count( $faqs ) - 1 ) ? ' style="border-bottom:none;"' : '';
 				?>
 				<div class="<?php echo esc_attr( $item_classes ); ?>"<?php echo $item_style; ?>>
-					<h3 class="faq-q" onclick="this.closest('.faq-item').classList.toggle('open')"><?php echo esc_html( $row['question'] ); ?><span class="faq-toggle"></span></h3>
-					<div class="faq-a"><?php echo esc_html( $row['answer'] ); ?></div>
+					<h3 class="faq-q" onclick="this.closest('.faq-item').classList.toggle('open')"><?php echo blocksy_child_kses_inline( $row['question'] ); ?><span class="faq-toggle"></span></h3>
+					<div class="faq-a"><?php echo blocksy_child_kses_inline( $row['answer'] ); ?></div>
 				</div>
 				<?php endforeach; ?>
 			</div>
@@ -88,11 +88,11 @@ if ( empty( $faqs ) ) {
 				<div style="position:relative;border-radius:var(--radius-img);overflow:hidden;min-height:480px;display:flex;flex-direction:column;justify-content:flex-end;">
 					<div class="img-ph" style="position:absolute;inset:0;border-radius:0;background-image:url('<?php echo esc_url( $cta_img ); ?>');background-size:cover;background-position:center;"></div>
 					<div style="position:relative;z-index:2;margin:20px;padding:28px;background:rgba(0,0,0,0.55);border-radius:16px;backdrop-filter:blur(12px);">
-						<h3 style="color:#fff;margin-bottom:10px;font-size:1.1rem;"><?php echo esc_html( $a['ctaTitle'] ); ?></h3>
-						<p style="color:rgba(255,255,255,0.75);font-size:0.875rem;margin-bottom:22px;"><?php echo esc_html( $a['ctaBody'] ); ?></p>
-						<a href="<?php echo esc_url( $a['ctaBtn1Url'] ); ?>" class="btn-cta btn-cta--solid" style="width:100%;justify-content:center;margin-bottom:12px;"><?php echo esc_html( $a['ctaBtn1Text'] ); ?></a>
+						<h3 style="color:#fff;margin-bottom:10px;font-size:1.1rem;"><?php echo blocksy_child_kses_inline( $a['ctaTitle'] ); ?></h3>
+						<p style="color:rgba(255,255,255,0.75);font-size:0.875rem;margin-bottom:22px;"><?php echo blocksy_child_kses_inline( $a['ctaBody'] ); ?></p>
+						<a href="<?php echo esc_url( $a['ctaBtn1Url'] ); ?>" class="btn-cta btn-cta--solid" style="width:100%;justify-content:center;margin-bottom:12px;"><?php echo blocksy_child_kses_inline( $a['ctaBtn1Text'] ); ?></a>
 						<div style="text-align:center;">
-							<a href="<?php echo esc_url( $a['ctaBtn2Url'] ); ?>" class="btn btn--white" style="font-size:0.85rem;justify-content:center;"><?php echo esc_html( $a['ctaBtn2Text'] ); ?></a>
+							<a href="<?php echo esc_url( $a['ctaBtn2Url'] ); ?>" class="btn btn--white" style="font-size:0.85rem;justify-content:center;"><?php echo blocksy_child_kses_inline( $a['ctaBtn2Text'] ); ?></a>
 						</div>
 					</div>
 				</div>

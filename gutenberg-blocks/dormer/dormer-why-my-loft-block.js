@@ -10,6 +10,25 @@
     var TextControl = wp.components.TextControl;
     var TextareaControl = wp.components.TextareaControl;
 
+    // Inline editable RichText rendered on the canvas. Restrictive by design:
+    // the editor can only change text, never the layout/structure. opts.plain
+    // (headings, labels, buttons) allows no formatting; otherwise links + bold/italic.
+    function rt(tagName, value, onChange, opts) {
+        opts = opts || {};
+        var props = {
+            tagName: tagName,
+            value: typeof value === 'string' ? value : '',
+            onChange: onChange,
+            allowedFormats: opts.plain ? [] : ['core/bold', 'core/italic', 'core/link']
+        };
+        if (opts.className) { props.className = opts.className; }
+        if (opts.style) { props.style = opts.style; }
+        if (opts.placeholder) { props.placeholder = opts.placeholder; }
+        if (opts.key) { props.key = opts.key; }
+        if (opts.href) { props.href = opts.href; }
+        return el(RichText, props);
+    }
+
     if (typeof getBlockType === 'function' && getBlockType('myloft/dormer-why-my-loft')) return;
 
     try {
@@ -55,11 +74,21 @@
             edit: function (props) {
                 var attrs = props.attributes;
                 var setAttributes = props.setAttributes;
-                var SSR = wp.serverSideRender && (wp.serverSideRender.default || wp.serverSideRender);
-                var blockProps = useBlockProps({ style: { margin: 0, padding: 0 } });
-                if (!SSR) {
-                    return el('div', blockProps, el('p', { style: { padding: '1em', color: '#666' } }, 'Dormer Why My Loft — preview requires ServerSideRender'));
-                }
+                var blockProps = useBlockProps({ className: 'dormer-loft-blocks', style: { margin: 0, padding: 0 } });
+                function set(key) { return function (v) { var u = {}; u[key] = v; setAttributes(u); }; }
+
+                var uspIcons = [
+                    el('path', { d: 'M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z' }),
+                    el('path', { d: 'M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zm4.24 16L12 15.45 7.77 18l1.12-4.81-3.73-3.23 4.92-.42L12 5l1.92 4.53 4.92.42-3.73 3.23L16.23 18z' }),
+                    el('path', { d: 'M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z' })
+                ];
+                var usps = [
+                    { badgeKey: 'usp1Badge', h3Key: 'usp1H3', pKey: 'usp1P' },
+                    { badgeKey: 'usp2Badge', h3Key: 'usp2H3', pKey: 'usp2P' },
+                    { badgeKey: 'usp3Badge', h3Key: 'usp3H3', pKey: 'usp3P' }
+                ];
+                var included = ['inc1', 'inc2', 'inc3', 'inc4', 'inc5', 'inc6', 'inc7', 'inc8', 'inc9', 'inc10'];
+
                 return el('div', blockProps,
                     el(InspectorControls, {},
                         el(PanelBody, { title: 'Section Content', initialOpen: true },
@@ -110,7 +139,61 @@
                             el(TextControl, { label: 'CTA 2 URL', value: attrs.cta2Url, onChange: function (v) { setAttributes({ cta2Url: v }); } })
                         )
                     ),
-                    el(SSR, { block: 'myloft/dormer-why-my-loft', attributes: attrs })
+                    el('section', { className: 'section section--dark', id: 'why-my-loft' },
+                        el('div', { className: 'wrap' },
+                            el('div', { style: { textAlign: 'center', marginBottom: '56px' } },
+                                rt('span', attrs.eyebrow, set('eyebrow'), { plain: true, className: 'eyebrow', placeholder: 'Eyebrow' }),
+                                rt('h2', attrs.h2, set('h2'), { plain: true, style: { color: '#fff', marginBottom: '12px' }, placeholder: 'Heading' }),
+                                rt('h3', attrs.h3Subtitle, set('h3Subtitle'), { plain: true, style: { color: 'rgba(255,255,255,0.7)', fontSize: '1rem', fontWeight: '400', lineHeight: '1.6', letterSpacing: 'normal', textTransform: 'none', maxWidth: '720px', margin: '16px auto 0', fontFamily: 'inherit' }, placeholder: 'Subtitle' })
+                            ),
+                            el('div', { className: 'grid-3', style: { marginBottom: '32px' } },
+                                usps.map(function (usp, idx) {
+                                    return el('div', { className: 'card', style: { textAlign: 'center' }, key: 'usp-' + idx },
+                                        el('div', { className: 'icon-wrap', style: { margin: '0 auto 18px' } },
+                                            el('svg', { className: 'icon', viewBox: '0 0 24 24' }, uspIcons[idx])
+                                        ),
+                                        rt('span', attrs[usp.badgeKey], set(usp.badgeKey), { plain: true, className: 'badge badge--light', style: { marginBottom: '12px' }, placeholder: 'Badge' }),
+                                        rt('h3', attrs[usp.h3Key], set(usp.h3Key), { plain: true, style: { marginBottom: '10px' }, placeholder: 'Heading' }),
+                                        rt('p', attrs[usp.pKey], set(usp.pKey), { style: { color: '#5a5a5a', fontSize: '0.875rem' }, placeholder: 'Description' })
+                                    );
+                                })
+                            ),
+                            el('div', { style: { display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px', marginBottom: '48px' } },
+                                el('div', { className: 'card--dark' },
+                                    el('div', { className: 'icon-wrap icon-wrap--white', style: { marginBottom: '16px' } },
+                                        el('svg', { className: 'icon icon--white', viewBox: '0 0 24 24' }, el('path', { d: 'M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z' }))
+                                    ),
+                                    rt('h3', attrs.dark1H3, set('dark1H3'), { plain: true, style: { color: '#fff', marginBottom: '8px' }, placeholder: 'Heading' }),
+                                    rt('p', attrs.dark1P, set('dark1P'), { style: { color: 'var(--color-muted)', fontSize: '0.875rem' }, placeholder: 'Dark panel 1 body' })
+                                ),
+                                el('div', { className: 'card--dark' },
+                                    el('div', { className: 'icon-wrap icon-wrap--white', style: { marginBottom: '16px' } },
+                                        el('svg', { className: 'icon icon--white', viewBox: '0 0 24 24' }, el('path', { d: 'M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 10.99h7c-.53 4.12-3.28 7.79-7 8.94V12H5V6.3l7-3.11v8.8z' }))
+                                    ),
+                                    rt('h3', attrs.dark2H3, set('dark2H3'), { plain: true, style: { color: '#fff', marginBottom: '8px' }, placeholder: 'Heading' }),
+                                    rt('p', attrs.dark2P, set('dark2P'), { style: { color: 'var(--color-muted)', fontSize: '0.875rem' }, placeholder: 'Dark panel 2 body' })
+                                )
+                            ),
+                            el('div', { style: { background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 'var(--radius-card)', padding: '36px' } },
+                                rt('h3', attrs.includedTitle, set('includedTitle'), { plain: true, style: { color: '#fff', marginBottom: '24px', textAlign: 'center' }, placeholder: 'Section Title' }),
+                                el('div', { style: { display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px 48px' } },
+                                    included.map(function (key, idx) {
+                                        var isLastPair = (idx >= 8);
+                                        var itemStyle = { display: 'flex', alignItems: 'center', gap: '10px', color: 'var(--color-muted)', fontSize: '0.875rem', padding: '6px 0' };
+                                        if (!isLastPair) { itemStyle.borderBottom = '1px solid rgba(255,255,255,0.06)'; }
+                                        return el('div', { style: itemStyle, key: 'inc-' + idx },
+                                            el('span', { style: { color: 'var(--color-orange)', fontWeight: '800', fontSize: '0.8rem' } }, '✓'),
+                                            rt('span', attrs[key], set(key), { plain: true, placeholder: 'Item ' + (idx + 1) })
+                                        );
+                                    })
+                                )
+                            ),
+                            el('div', { style: { marginTop: '36px', textAlign: 'center', display: 'flex', justifyContent: 'center', gap: '20px', flexWrap: 'wrap' } },
+                                rt('a', attrs.cta1Text, set('cta1Text'), { plain: true, href: attrs.cta1Url || '#', className: 'btn-cta btn-cta--solid', placeholder: 'CTA 1' }),
+                                rt('a', attrs.cta2Text, set('cta2Text'), { plain: true, href: attrs.cta2Url || '#', className: 'btn btn--white', placeholder: 'CTA 2' })
+                            )
+                        )
+                    )
                 );
             },
             save: function () { return null; },

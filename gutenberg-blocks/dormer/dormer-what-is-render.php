@@ -22,18 +22,18 @@ $a = wp_parse_args( array_filter( $_raw, function( $v ) { return $v !== ''; } ),
 	<div class="wrap">
 		<div class="grid-2" style="gap:64px;">
 			<div>
-				<span class="eyebrow"><?php echo esc_html( $a['eyebrow'] ); ?></span>
-				<h2 style="margin-bottom:20px;"><?php echo esc_html( $a['h2'] ); ?></h2>
-				<p style="color:#3a3a3a;margin-bottom:16px;"><?php echo wp_kses_post( $a['para1'] ); ?></p>
-				<p style="color:#5a5a5a;margin-bottom:24px;"><?php echo wp_kses_post( $a['para2'] ); ?></p>
-				<h3 style="margin-bottom:14px;font-size:1rem;"><?php echo esc_html( $a['h3'] ); ?></h3>
+				<span class="eyebrow"><?php echo blocksy_child_kses_inline( $a['eyebrow'] ); ?></span>
+				<h2 style="margin-bottom:20px;"><?php echo blocksy_child_kses_inline( $a['h2'] ); ?></h2>
+				<p style="color:#3a3a3a;margin-bottom:16px;"><?php echo blocksy_child_kses_inline( $a['para1'] ); ?></p>
+				<p style="color:#5a5a5a;margin-bottom:24px;"><?php echo blocksy_child_kses_inline( $a['para2'] ); ?></p>
+				<h3 style="margin-bottom:14px;font-size:1rem;"><?php echo blocksy_child_kses_inline( $a['h3'] ); ?></h3>
 				<ul class="checklist checklist--light">
-					<li><span class="chk">✓</span><?php echo esc_html( $a['check1'] ); ?></li>
-					<li><span class="chk">✓</span><?php echo esc_html( $a['check2'] ); ?></li>
-					<li><span class="chk">✓</span><?php echo esc_html( $a['check3'] ); ?></li>
-					<li><span class="chk">✓</span><?php echo esc_html( $a['check4'] ); ?></li>
+					<li><span class="chk">✓</span><?php echo blocksy_child_kses_inline( $a['check1'] ); ?></li>
+					<li><span class="chk">✓</span><?php echo blocksy_child_kses_inline( $a['check2'] ); ?></li>
+					<li><span class="chk">✓</span><?php echo blocksy_child_kses_inline( $a['check3'] ); ?></li>
+					<li><span class="chk">✓</span><?php echo blocksy_child_kses_inline( $a['check4'] ); ?></li>
 				</ul>
-				<p style="color:#999;font-size:0.85rem;margin-top:14px;"><?php echo esc_html( $a['note'] ); ?></p>
+				<p style="color:#999;font-size:0.85rem;margin-top:14px;"><?php echo blocksy_child_kses_inline( $a['note'] ); ?></p>
 			</div>
 			<div>
 				<div class="img-ph img-ph--light" style="width:100%;aspect-ratio:4/3;background-image:url('<?php echo esc_url( ! empty( $a['imageUrl'] ) ? $a['imageUrl'] : 'https://masterpiececonstruction.co.uk/wp-content/uploads/2023/04/Kew.jpg' ); ?>');background-size:cover;background-position:center;"></div>

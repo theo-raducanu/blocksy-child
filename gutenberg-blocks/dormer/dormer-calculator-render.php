@@ -1,7 +1,7 @@
 <?php
 defined( 'ABSPATH' ) || exit;
 // The calculator section has interactive JS — we render the full static HTML.
-// Only eyebrow, h2, and description are editable.
+// Only eyebrow, h2, and description are editable (inline).
 $defaults = [
 	'eyebrow'     => 'Instant Estimate',
 	'h2'          => 'How Much Will Your Loft Conversion Cost?',
@@ -13,9 +13,9 @@ $a = wp_parse_args( array_filter( $_raw, function( $v ) { return $v !== ''; } ),
 <section class="section section--dark" id="calculator">
 	<div class="wrap">
 		<div style="text-align:center;margin-bottom:44px;">
-			<span class="eyebrow"><?php echo esc_html( $a['eyebrow'] ); ?></span>
-			<h2 style="color:#fff;"><?php echo esc_html( $a['h2'] ); ?></h2>
-			<p style="color:var(--color-muted);max-width:500px;margin:12px auto 0;font-size:0.95rem;"><?php echo esc_html( $a['description'] ); ?></p>
+			<span class="eyebrow"><?php echo blocksy_child_kses_inline( $a['eyebrow'] ); ?></span>
+			<h2 style="color:#fff;"><?php echo blocksy_child_kses_inline( $a['h2'] ); ?></h2>
+			<p style="color:var(--color-muted);max-width:500px;margin:12px auto 0;font-size:0.95rem;"><?php echo blocksy_child_kses_inline( $a['description'] ); ?></p>
 		</div>
 		<div style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);border-radius:var(--radius-card);padding:36px;max-width:840px;margin:0 auto;">
 			<div style="display:grid;grid-template-columns:1fr 1fr;gap:28px;margin-bottom:36px;">
