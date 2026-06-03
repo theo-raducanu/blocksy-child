@@ -18,6 +18,14 @@ $section_class  = 'section ' . ( $is_dark ? 'section--dark' : 'section--light' )
 $heading_color  = $is_dark ? '#fff' : '#1e1e1e';
 $intro_color    = $is_dark ? 'rgba(255,255,255,0.7)' : '#3a3a3a';
 $cta2_class     = $is_dark ? 'btn btn--white' : 'btn btn--dark';
+
+// A CTA shows only when its text is non-empty. Read straight from the raw
+// attributes (not $a) so a deliberately cleared CTA isn't refilled by the
+// default text via the array_filter()/wp_parse_args() merge above.
+$cta1_text = array_key_exists( 'cta1Text', $_raw ) ? trim( (string) $_raw['cta1Text'] ) : $defaults['cta1Text'];
+$cta2_text = array_key_exists( 'cta2Text', $_raw ) ? trim( (string) $_raw['cta2Text'] ) : $defaults['cta2Text'];
+$show_cta1 = ( $cta1_text !== '' );
+$show_cta2 = ( $cta2_text !== '' );
 ?>
 <section class="<?php echo esc_attr( $section_class ); ?>" id="cta-section">
 	<div class="wrap">
@@ -28,9 +36,15 @@ $cta2_class     = $is_dark ? 'btn btn--white' : 'btn btn--dark';
 			<p class="section-intro" style="color:<?php echo esc_attr( $intro_color ); ?>;max-width:720px;margin:16px auto 0;font-size:1rem;line-height:1.6;"><?php echo blocksy_child_kses_inline( $a['intro'] ); ?></p>
 			<?php endif; ?>
 		</div>
+		<?php if ( $show_cta1 || $show_cta2 ) : ?>
 		<div style="margin-top:44px;text-align:center;display:flex;justify-content:center;gap:20px;flex-wrap:wrap;">
-			<a href="<?php echo esc_url( $a['cta1Url'] ); ?>" class="btn-cta btn-cta--solid"><?php echo blocksy_child_kses_inline( $a['cta1Text'] ); ?></a>
-			<a href="<?php echo esc_url( $a['cta2Url'] ); ?>" class="<?php echo esc_attr( $cta2_class ); ?>"><?php echo blocksy_child_kses_inline( $a['cta2Text'] ); ?></a>
+			<?php if ( $show_cta1 ) : ?>
+			<a href="<?php echo esc_url( $a['cta1Url'] ); ?>" class="btn-cta btn-cta--solid"><?php echo blocksy_child_kses_inline( $cta1_text ); ?></a>
+			<?php endif; ?>
+			<?php if ( $show_cta2 ) : ?>
+			<a href="<?php echo esc_url( $a['cta2Url'] ); ?>" class="<?php echo esc_attr( $cta2_class ); ?>"><?php echo blocksy_child_kses_inline( $cta2_text ); ?></a>
+			<?php endif; ?>
 		</div>
+		<?php endif; ?>
 	</div>
 </section>

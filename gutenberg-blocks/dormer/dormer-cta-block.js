@@ -64,6 +64,18 @@
                 };
                 var cta2Class = isDark ? 'btn btn--white' : 'btn btn--dark';
 
+                // A CTA shows only when its text is non-empty — mirrors the frontend.
+                // Cleared CTAs vanish here; re-add them via the sidebar "CTA Buttons" fields.
+                var hasCta1 = (attrs.cta1Text || '').trim() !== '';
+                var hasCta2 = (attrs.cta2Text || '').trim() !== '';
+                var ctaButtons = [];
+                if (hasCta1) {
+                    ctaButtons.push(rt('a', attrs.cta1Text, set('cta1Text'), { plain: true, href: attrs.cta1Url || '#', className: 'btn-cta btn-cta--solid', placeholder: 'CTA 1', key: 'cta1' }));
+                }
+                if (hasCta2) {
+                    ctaButtons.push(rt('a', attrs.cta2Text, set('cta2Text'), { plain: true, href: attrs.cta2Url || '#', className: cta2Class, placeholder: 'CTA 2', key: 'cta2' }));
+                }
+
                 return el('div', blockProps,
                     el(InspectorControls, {},
                         el(PanelBody, { title: 'Appearance', initialOpen: true },
@@ -96,10 +108,7 @@
                                 rt('h2', attrs.h2, set('h2'), { plain: true, style: headingStyle, placeholder: 'Heading' }),
                                 rt('p', attrs.intro, set('intro'), { className: 'section-intro', style: introStyle, placeholder: 'Intro paragraph (optional)' })
                             ),
-                            el('div', { style: { marginTop: '44px', textAlign: 'center', display: 'flex', justifyContent: 'center', gap: '20px', flexWrap: 'wrap' } },
-                                rt('a', attrs.cta1Text, set('cta1Text'), { plain: true, href: attrs.cta1Url || '#', className: 'btn-cta btn-cta--solid', placeholder: 'CTA 1' }),
-                                rt('a', attrs.cta2Text, set('cta2Text'), { plain: true, href: attrs.cta2Url || '#', className: cta2Class, placeholder: 'CTA 2' })
-                            )
+                            ctaButtons.length ? el('div', { style: { marginTop: '44px', textAlign: 'center', display: 'flex', justifyContent: 'center', gap: '20px', flexWrap: 'wrap' } }, ctaButtons) : null
                         )
                     )
                 );
